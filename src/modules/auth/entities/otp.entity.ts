@@ -7,8 +7,8 @@ export class OtpEntity extends BaseEntity {
   @Column({type: 'varchar', nullable: false})
   mobile: string
 
-  @Column({type: 'numeric', nullable: false})
-  code: number
+  @Column({type: 'varchar', nullable: false})
+  code: string
 
   @Column({type: 'timestamp', nullable: false})
   expiresAt: Date
