@@ -1,11 +1,9 @@
-import { PrimaryGeneratedColumn, Column, Entity, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
 import UserRole from "../enums/UserRole";
+import { BaseEntity } from "src/common/abstracts/base.entity";
 
 @Entity('user')
-export class UserEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
-
+export class UserEntity extends BaseEntity{
   @Column({type: 'varchar', length: 30, nullable: true})
   name!: string;
 
@@ -31,12 +29,6 @@ export class UserEntity {
   // @ManyToMany(()=> PostPG, post => post.favoriteBy)
   // @JoinTable()
   // favoritePosts!: PostPG[];
-
-  @CreateDateColumn()
-  createdAt!: Date;
-
-  @UpdateDateColumn()
-  updatedAt!: Date;
 
   // @OneToMany(() => PostPG, post => post.author)
   // adminPosts!: IPostPG[];
