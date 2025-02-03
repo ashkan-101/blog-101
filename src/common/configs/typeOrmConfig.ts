@@ -1,6 +1,7 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { UserEntity } from "src/modules/user/entities/user.entity";
 import { config } from "dotenv";
+import { OtpEntity } from "src/modules/auth/entities/otp.entity";
 config()
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
@@ -11,5 +12,5 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: process.env.PG_PASSWORD as string,
   database: 'blog-101',
   synchronize: true,
-  entities: [UserEntity]
+  entities: [UserEntity, OtpEntity]
 }
