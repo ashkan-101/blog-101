@@ -10,6 +10,7 @@ import { UserEntity } from "../entities/user.entity";
   providers: [UserAppService],
   imports: [
     TypeOrmModule.forFeature([UserEntity])
-  ]
+  ],
+  exports: [UserAppService]
 })
 export class UserAppModule{}

@@ -15,7 +15,7 @@ export class UserAppService {
     return await this.userRepository.findOne({where: {mobile}})
   }
 
-  public async createNewUserWithMobile(mobile: string){
+  public async createNewUserByMobile(mobile: string){
     const newUser = this.userRepository.create({mobile})
      return await newUser.save()
   }
