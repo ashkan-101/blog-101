@@ -2,7 +2,7 @@ import { PrimaryGeneratedColumn, Column, Entity, CreateDateColumn, UpdateDateCol
 import UserRole from "../enums/UserRole";
 
 @Entity('user')
-export default class UserPG {
+export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
