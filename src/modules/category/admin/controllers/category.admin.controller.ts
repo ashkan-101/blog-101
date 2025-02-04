@@ -1,7 +1,7 @@
 import { Body, Controller, DefaultValuePipe, Get, ParseIntPipe, Post, Query } from "@nestjs/common";
 import { NewCategoryDto } from "../dtos/new-category.dto";
 import { CategoryAdminService } from "../services/category.admin.service";
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CategoryEntity } from "../../entities/category.entity";
 
 
@@ -60,6 +60,42 @@ export class CategoryAdminController {
     return newCategory
   }
 
+  @ApiTags('Admin - Category Management')
+  @ApiOperation({
+    summary: 'Get a paginated list of categories',
+    description: 'Fetch a list of categories with pagination support. You can specify the page number with the "page" query parameter.',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'The page number for pagination. Default is 1.',
+    type: Number,
+    example: 1,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched categories list',
+    schema: {
+      type: 'object',
+      properties: {
+        totalPages: {
+          type: 'number',
+          description: 'The total number of pages available based on the pagination.',
+        },
+        categories: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', description: 'Category ID' },
+              title: { type: 'string', description: 'Category Title' },
+              createdAt: { type: 'string', description: 'Creation timestamp of the category', format: 'date-time' },
+            },
+          },
+        },
+      },
+    },
+  })
   @Get('/categories-list')
   async getAllCategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
     return await this.categoryService.getAllCategories(page)
