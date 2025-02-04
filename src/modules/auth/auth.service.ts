@@ -27,7 +27,7 @@ export class AuthService {
 
   private async validateAndReturnOtp(mobile: string, otpCode: string): Promise<OtpEntity>{
     const otp = await this.otpRepository.findOne({where: {mobile}, order: {createdAt: 'DESC'}})
-    if(!otp) throw new NotFoundException('not found any otp with this ohone number')
+    if(!otp) throw new NotFoundException('not found any otp with this phone number')
 
     const compareOtp = compareSync(otpCode, otp.code)
     if(!compareOtp) throw new BadRequestException('otp code is not correct')
