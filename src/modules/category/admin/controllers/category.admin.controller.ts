@@ -1,7 +1,7 @@
 import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query } from "@nestjs/common";
 import { NewCategoryDto } from "../dtos/new-category.dto";
 import { CategoryAdminService } from "../services/category.admin.service";
-import { ApiBody, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { CategoryEntity } from "../../entities/category.entity";
 
 
@@ -98,6 +98,35 @@ export class CategoryAdminController {
     return await this.categoryService.getAllCategories(page)
   }
 
+
+  @ApiOperation({
+    summary: 'Delete a category by ID',
+    description: 'Deletes a category using its unique ID. If the category is not found, a NotFoundException will be thrown.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'The unique identifier of the category to be deleted.',
+    type: String,
+    example: '9b6b015e-9b89-4df8-9e5d-06c93920cf1b',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The category was successfully deleted.',
+    schema: {
+      type: 'object',
+      properties: {
+        deleteResult: {
+          type: 'boolean',
+          example: true,
+          description: 'Indicates whether the deletion was successful.',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Category not found with the provided ID.',
+  })
   @Delete('/delete/:id')
   async deleteCategory(@Param('id', ParseUUIDPipe) id: string){
     await this.categoryService.deleteCategoryById(id)
