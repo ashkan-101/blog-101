@@ -1,7 +1,7 @@
-import { Body, Controller, DefaultValuePipe, Get, ParseIntPipe, Post, Query } from "@nestjs/common";
+import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query } from "@nestjs/common";
 import { NewCategoryDto } from "../dtos/new-category.dto";
 import { CategoryAdminService } from "../services/category.admin.service";
-import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { CategoryEntity } from "../../entities/category.entity";
 
 
@@ -11,8 +11,6 @@ export class CategoryAdminController {
     private readonly categoryService: CategoryAdminService
   ){}
 
-
-  @ApiTags('Admin - Category Management')
   @ApiOperation({ summary: 'Create a new category' })
   @ApiBody({ type: NewCategoryDto })
   @ApiResponse({
@@ -60,7 +58,6 @@ export class CategoryAdminController {
     return newCategory
   }
 
-  @ApiTags('Admin - Category Management')
   @ApiOperation({
     summary: 'Get a paginated list of categories',
     description: 'Fetch a list of categories with pagination support. You can specify the page number with the "page" query parameter.',
@@ -99,5 +96,11 @@ export class CategoryAdminController {
   @Get('/categories-list')
   async getAllCategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
     return await this.categoryService.getAllCategories(page)
+  }
+
+  @Delete('/delete/:id')
+  async deleteCategory(@Param('id', ParseUUIDPipe) id: string){
+    await this.categoryService.deleteCategoryById(id)
+    return { deleteResult: true }
   }
 }

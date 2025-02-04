@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { NewCategoryDto } from "../dtos/new-category.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CategoryEntity } from "../../entities/category.entity";
@@ -43,5 +43,10 @@ export class CategoryAdminService {
       totlaPages: Math.ceil(totalCount / pagination.take),
       categories
     }
+  }
+
+  public async deleteCategoryById(categoryId: string): Promise<void>{
+    const deleteResult = await this.categoryRepository.delete({id: categoryId})
+    if(deleteResult.affected === 0) throw new NotFoundException('not found any category with this ID')
   }
 } 
