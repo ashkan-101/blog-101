@@ -19,4 +19,8 @@ export class UserAppService {
     const newUser = this.userRepository.create({mobile})
      return await newUser.save()
   }
+
+  public async findUserById(userId: string){
+    return await this.userRepository.findOne({where: { id: userId }})
+  }
 }

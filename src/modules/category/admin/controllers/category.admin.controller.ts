@@ -1,9 +1,16 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query } from "@nestjs/common";
+import { 
+  Body, Request,
+  Controller, 
+  DefaultValuePipe, 
+  Delete, Get, Param, 
+  ParseIntPipe, ParseUUIDPipe, 
+  Post, Query, UseGuards 
+} from "@nestjs/common";
 import { NewCategoryDto } from "../dtos/new-category.dto";
 import { CategoryAdminService } from "../services/category.admin.service";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { CategoryEntity } from "../../entities/category.entity";
-
+import { JwtGuard } from "src/common/guards/jwt.passport.guard";
 
 @Controller('/api/v1/category-admin')
 export class CategoryAdminController {
@@ -94,7 +101,8 @@ export class CategoryAdminController {
     },
   })
   @Get('/categories-list')
-  async getAllCategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
+  @UseGuards(JwtGuard)
+  async getAllCategories(@Request() req, @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
     return await this.categoryService.getAllCategories(page)
   }
 
