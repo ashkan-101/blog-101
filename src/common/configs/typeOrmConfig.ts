@@ -3,6 +3,7 @@ import { UserEntity } from "src/modules/user/entities/user.entity";
 import { config } from "dotenv";
 import { OtpEntity } from "src/modules/auth/entities/otp.entity";
 import { CategoryEntity } from "src/modules/category/entities/category.entity";
+import { SubcategoryEntity } from "src/modules/category/entities/subcategory.entity";
 config()
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
@@ -13,5 +14,5 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: process.env.PG_PASSWORD as string,
   database: 'blog-101',
   synchronize: true,
-  entities: [UserEntity, OtpEntity, CategoryEntity]
+  entities: [UserEntity, OtpEntity, CategoryEntity, SubcategoryEntity]
 }
