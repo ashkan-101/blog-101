@@ -8,7 +8,8 @@ export class AuthFactory {
   private readonly findUser: IFindUserByMobile
   private readonly createUser: ICreateUserByMobile
   constructor(userAppService: UserAppService){
-    this.findUser = userAppService
+    this.findUser = userAppService,
+    this.createUser = userAppService
   }
 
   public async validateUserByMobile(mobile: string){
@@ -16,6 +17,6 @@ export class AuthFactory {
   }
 
   public async createNewUserByMobile(mobile: string){
-    return await this.createUser.createNewUserWithMobile(mobile)
+    return await this.createUser.createNewUserByMobile(mobile)
   }
 }
