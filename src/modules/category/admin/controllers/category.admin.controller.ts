@@ -1,14 +1,18 @@
-import { Controller } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { CategoryEntity } from "../../entities/category.entity";
-import { Repository } from "typeorm";
+import { Body, Controller, Post } from "@nestjs/common";
+import { NewCategoryDto } from "../dtos/new-category.dto";
+import { CategoryAdminService } from "../services/category.admin.service";
 
 
 @Controller('/api/v1/category-admin')
 export class CategoryAdminController {
   constructor(
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity> 
+    private readonly categoryService: CategoryAdminService
   ){}
-  
+
+  @Post('/create')
+  async createNewCategory(@Body() body: NewCategoryDto) {
+    const newCategory = await this.categoryService.createCategory(body)
+
+    return newCategory
+  }  
 }
