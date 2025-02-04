@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, DefaultValuePipe, Get, ParseIntPipe, Post, Query } from "@nestjs/common";
 import { NewCategoryDto } from "../dtos/new-category.dto";
 import { CategoryAdminService } from "../services/category.admin.service";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -58,5 +58,10 @@ export class CategoryAdminController {
     const newCategory = await this.categoryService.createCategory(body)
 
     return newCategory
-  }  
+  }
+
+  @Get('/categories-list')
+  async getAllCategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
+    return await this.categoryService.getAllCategories(page)
+  }
 }
