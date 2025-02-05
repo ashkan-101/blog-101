@@ -12,7 +12,7 @@ import { CategoryAdminService } from "../services/category.admin.service";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { CategoryEntity } from "../../entities/category.entity";
 import { JwtGuard } from "src/modules/auth/guards/jwt.guard";
-import { Role } from "src/common/decorators/Role";
+import { SetAccessRoles } from "src/common/decorators/SetAccessRoles";
 import { RoleGuard } from "src/common/guards/role.guard";
 import { UpdateCategoryDto } from "../dtos/category/update-category.dto";
 
@@ -63,7 +63,7 @@ export class CategoryAdminController {
     },
   })
   @UseGuards(JwtGuard, RoleGuard)
-  @Role(['admin', 'superadmin'])
+  @SetAccessRoles(['admin', 'superadmin'])
   @Post('/create')
   async createNewCategory(@Body() body: NewCategoryDto) {
     const newCategory = await this.categoryService.createCategory(body)
@@ -107,7 +107,7 @@ export class CategoryAdminController {
     },
   })
   @UseGuards(JwtGuard, RoleGuard)
-  @Role(['admin', 'superadmin'])
+  @SetAccessRoles(['admin', 'superadmin'])
   @Get('/categories-list')
   async getAllCategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
     return await this.categoryService.getAllCategories(page)
@@ -143,7 +143,7 @@ export class CategoryAdminController {
     description: 'Category not found with the provided ID.',
   })
   @UseGuards(JwtGuard, RoleGuard)
-  @Role(['admin', 'superadmin'])
+  @SetAccessRoles(['admin', 'superadmin'])
   @Delete('/delete/:id')
   async deleteCategory(@Param('id', ParseUUIDPipe) id: string){
     await this.categoryService.deleteCategoryById(id)
@@ -178,7 +178,7 @@ export class CategoryAdminController {
     description: 'Title already exists',
   })
   @UseGuards(JwtGuard, RoleGuard)
-  @Role(['admin', 'superadmin'])
+  @SetAccessRoles(['admin', 'superadmin'])
   @Patch('/update/:id')
   async updateCategory(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateCategoryDto){
     await this.categoryService.updateCategoryById(id, body)
