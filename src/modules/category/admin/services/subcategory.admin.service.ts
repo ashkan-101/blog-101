@@ -45,10 +45,14 @@ export class SubcategoryAdminService {
   }
 
   public async getSubcategoriesByCategoryId(categoryId: string){
-    return await this.subcategoryRepository.find({
+    const subcategories = await this.subcategoryRepository.find({
       where: { category: { id: categoryId }},
       order: { category: { createdAt: 'DESC' }}
     })
+
+    if (subcategories.length === 0) throw new NotFoundException('No subcategories found for the given categoryId');
+
+    return subcategories
   }
 
   //------------------------------------export methods
