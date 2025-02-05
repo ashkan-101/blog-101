@@ -150,6 +150,33 @@ export class CategoryAdminController {
     return { deleteResult: true }
   }
 
+  @ApiOperation({ summary: 'Update a category by ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'The ID of the category to update',
+    type: String,
+  })
+  @ApiBody({
+    description: 'The new data for the category to be updated',
+    type: UpdateCategoryDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Category updated successfully',
+    schema: {
+      example: {
+        updateResult: true,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Category not found for the given ID',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Title already exists',
+  })
   @UseGuards(JwtGuard, RoleGuard)
   @Role(['admin', 'superadmin'])
   @Patch('/update/:id')
