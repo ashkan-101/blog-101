@@ -7,7 +7,7 @@ export class RoleGuard implements CanActivate {
     private readonly reflector: Reflector
   ){}
 
-  canActivate(context: ExecutionContext){
+  async canActivate(context: ExecutionContext){
     const userRole = context.switchToHttp().getRequest().user.role
     const requiredRole: string[] = this.reflector.get('roles', context.getHandler())
     
