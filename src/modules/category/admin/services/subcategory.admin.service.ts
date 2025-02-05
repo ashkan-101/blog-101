@@ -61,7 +61,7 @@ export class SubcategoryAdminService {
 
     return subcategories
   }
-
+  
   public async deleteSubcategoryById(subcategoryId: string){
     const deleteResult = await this.subcategoryRepository.delete({id: subcategoryId})
     if(deleteResult.affected === 0) throw new NotFoundException('not found any subcategory with this Id')

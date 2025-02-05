@@ -72,6 +72,24 @@ export class SubcategoryAdminController {
     return subcategories
   }
 
+
+  @ApiOperation({ summary: 'Delete a subcategory by its ID' })
+  @ApiParam({
+    name: 'id(UUID)',
+    description: 'The unique ID(UUID) of the subcategory to delete',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Subcategory successfully deleted',
+    schema: {
+      example: { deleteResult: true },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Subcategory not found for the given ID',
+  })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
   @Delete('/delete/:id')
