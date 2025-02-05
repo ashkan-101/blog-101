@@ -100,6 +100,32 @@ export class SubcategoryAdminController {
     return { deleteResult: true }
   }
 
+
+  @ApiOperation({ summary: 'Update a subcategory by its ID' })
+  @ApiParam({
+    name: 'id(UUID)',
+    description: 'The unique ID(UUID) of the subcategory to update',
+    type: String,
+  })
+  @ApiBody({
+    description: 'Updated data for the subcategory',
+    type: UpdateSubcategoryDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Subcategory successfully updated',
+    schema: {
+      example: { updateResult: true },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Subcategory not found for the given ID',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflict - The title already exists',
+  })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
   @Patch('/update/:id')
