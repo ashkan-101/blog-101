@@ -44,5 +44,12 @@ export class SubcategoryAdminService {
     return await subcategory.save()
   }
 
+  public async getSubcategoriesByCategoryId(categoryId: string){
+    return await this.subcategoryRepository.find({
+      where: { category: { id: categoryId }},
+      order: { category: { createdAt: 'DESC' }}
+    })
+  }
+
   //------------------------------------export methods
 }

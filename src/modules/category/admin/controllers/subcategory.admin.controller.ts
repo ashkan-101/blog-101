@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, UseGuards } from "@nestjs/common";
 import { SubcategoryAdminService } from "../services/subcategory.admin.service";
 import { NewSubcategoryDto } from "../dtos/subcategory/new-subcategory.dto";
 import { JwtGuard } from "src/modules/auth/guards/jwt.guard";
@@ -43,5 +43,11 @@ export class SubcategoryAdminController {
   async newSubcategory(@Body() body: NewSubcategoryDto){
     const newSubcategory = await this.subcategoryAdminService.createSubcategory(body);
     return newSubcategory
+  }
+
+  @Get('/subcategories/:categoryId')
+  async getSubcategoriesForCategory(@Param('categoryId', ParseUUIDPipe) categoryId: string){
+    const subcategories = await this.subcategoryAdminService.getSubcategoriesByCategoryId(categoryId)
+    return subcategories
   }
 }
