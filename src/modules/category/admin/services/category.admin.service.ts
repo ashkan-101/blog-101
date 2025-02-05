@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { CategoryEntity } from "../../entities/category.entity";
 import { Repository } from "typeorm";
 import { paginateTool } from "src/common/utils/pagination";
+import { UpdateCategoryDto } from "../dtos/update-category.dto";
 
 
 @Injectable()
@@ -21,7 +22,6 @@ export class CategoryAdminService {
       throw new ConflictException('this title already exist!')
     }
   }
-
 
   //------------------------------------public methods
   public async createCategory(params: NewCategoryDto){
@@ -48,5 +48,12 @@ export class CategoryAdminService {
   public async deleteCategoryById(categoryId: string): Promise<void>{
     const deleteResult = await this.categoryRepository.delete({id: categoryId})
     if(deleteResult.affected === 0) throw new NotFoundException('not found any category with this ID')
+  }
+
+  public async updateCategoryById(categoryId: string, params: UpdateCategoryDto){
+    await this.validateUniqueTitle(params.title)
+    
+    const updateResult = await this.categoryRepository.update({id: categoryId}, params)
+    if(updateResult.affected === 0) throw new NotFoundException('not found any category with this ID')
   }
 } 

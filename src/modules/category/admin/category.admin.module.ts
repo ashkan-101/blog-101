@@ -3,13 +3,13 @@ import { CategoryAdminController } from "./controllers/category.admin.controller
 import { CategoryAdminService } from "./services/category.admin.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CategoryEntity } from "../entities/category.entity";
-import { JwtModule } from "src/common/guards/jwt/jwt.module";
+import { AuthModule } from "src/modules/auth/auth.module";
 
 @Module({
   controllers: [CategoryAdminController],
   providers: [CategoryAdminService],
   imports: [
-    JwtModule,
+    AuthModule,
     TypeOrmModule.forFeature([CategoryEntity]),
   ]
 })

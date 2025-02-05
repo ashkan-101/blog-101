@@ -4,13 +4,17 @@ import {
   DefaultValuePipe, 
   Delete, Get, Param, 
   ParseIntPipe, ParseUUIDPipe, 
-  Post, Query, UseGuards 
+  Post, Query, UseGuards, 
+  Patch
 } from "@nestjs/common";
 import { NewCategoryDto } from "../dtos/new-category.dto";
 import { CategoryAdminService } from "../services/category.admin.service";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { CategoryEntity } from "../../entities/category.entity";
-import { JwtGuard } from "src/common/guards/jwt.passport.guard";
+import { JwtGuard } from "src/modules/auth/guards/jwt.guard";
+import { Role } from "src/common/decorators/Role";
+import { RoleGuard } from "src/common/guards/role.guard";
+import { UpdateCategoryDto } from "../dtos/update-category.dto";
 
 @Controller('/api/v1/category-admin')
 export class CategoryAdminController {
@@ -58,6 +62,8 @@ export class CategoryAdminController {
       },
     },
   })
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(['admin', 'superadmin'])
   @Post('/create')
   async createNewCategory(@Body() body: NewCategoryDto) {
     const newCategory = await this.categoryService.createCategory(body)
@@ -100,9 +106,10 @@ export class CategoryAdminController {
       },
     },
   })
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(['admin', 'superadmin'])
   @Get('/categories-list')
-  @UseGuards(JwtGuard)
-  async getAllCategories(@Request() req, @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
+  async getAllCategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
     return await this.categoryService.getAllCategories(page)
   }
 
@@ -135,9 +142,19 @@ export class CategoryAdminController {
     status: 404,
     description: 'Category not found with the provided ID.',
   })
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(['admin', 'superadmin'])
   @Delete('/delete/:id')
   async deleteCategory(@Param('id', ParseUUIDPipe) id: string){
     await this.categoryService.deleteCategoryById(id)
     return { deleteResult: true }
+  }
+
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(['admin', 'superadmin'])
+  @Patch('/update/:id')
+  async updateCategory(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateCategoryDto){
+    await this.categoryService.updateCategoryById(id, body)
+    return { updateResult: true }
   }
 }
