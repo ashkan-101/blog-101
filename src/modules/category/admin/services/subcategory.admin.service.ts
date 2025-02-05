@@ -47,12 +47,24 @@ export class SubcategoryAdminService {
   public async getSubcategoriesByCategoryId(categoryId: string){
     const subcategories = await this.subcategoryRepository.find({
       where: { category: { id: categoryId }},
-      order: { category: { createdAt: 'DESC' }}
+      order: { category: { createdAt: 'DESC' }},
+      relations: ['category'],
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        category: {id: true, title: true, createdAt: true}
+      }
     })
 
     if (subcategories.length === 0) throw new NotFoundException('No subcategories found for the given categoryId');
 
     return subcategories
+  }
+
+  public async deleteSubcategoryById(subcategoryId: string){
+    const deleteResult = await this.subcategoryRepository.delete({id: subcategoryId})
+    if(deleteResult.affected === 0) throw new NotFoundException('not found any subcategory with this Id')
   }
 
   //------------------------------------export methods
