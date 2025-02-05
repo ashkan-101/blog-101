@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from "@nestjs/common";
 import { SubcategoryAdminService } from "../services/subcategory.admin.service";
 import { NewSubcategoryDto } from "../dtos/subcategory/new-subcategory.dto";
 import { JwtGuard } from "src/modules/auth/guards/jwt.guard";
 import { RoleGuard } from "src/common/guards/role.guard";
 import { SetAccessRoles } from "src/common/decorators/SetAccessRoles";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
+import { UpdateSubcategoryDto } from "../dtos/subcategory/update-subcategory.dto";
 
 
 @Controller('/api/v1/subcategory-admin')
@@ -97,5 +98,14 @@ export class SubcategoryAdminController {
     await this.subcategoryAdminService.deleteSubcategoryById(id)
 
     return { deleteResult: true }
+  }
+
+  @UseGuards(JwtGuard, RoleGuard)
+  @SetAccessRoles(['admin', 'superadmin'])
+  @Patch('/update/:id')
+  async updateSubcategory(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateSubcategoryDto){
+    await this.subcategoryAdminService.updateSubcategoryById(id, body)
+
+    return { updateResult: true }
   }
 }

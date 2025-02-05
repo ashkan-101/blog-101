@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { IFindCategoryById } from "../../interfaces/IFindCategoryById";
 import { CategoryAdminService } from "./category.admin.service";
 import { NewSubcategoryDto } from "../dtos/subcategory/new-subcategory.dto";
+import { UpdateSubcategoryDto } from "../dtos/subcategory/update-subcategory.dto";
 
 
 @Injectable()
@@ -61,11 +62,17 @@ export class SubcategoryAdminService {
 
     return subcategories
   }
-  
+
   public async deleteSubcategoryById(subcategoryId: string){
     const deleteResult = await this.subcategoryRepository.delete({id: subcategoryId})
     if(deleteResult.affected === 0) throw new NotFoundException('not found any subcategory with this Id')
   }
 
+  public async updateSubcategoryById(subcategoryId: string, params: UpdateSubcategoryDto){
+    await this.validateUniqueTitle(params.title)
+    const updateResult = await this.subcategoryRepository.update({ id: subcategoryId }, params)
+
+    if(updateResult.affected === 0) throw new NotFoundException('not found any subcategory with this Id')
+  }
   //------------------------------------export methods
 }
