@@ -16,7 +16,7 @@ import { SetAccessRoles } from "src/common/decorators/SetAccessRoles";
 import { RoleGuard } from "src/common/guards/role.guard";
 import { UpdateCategoryDto } from "../dtos/category/update-category.dto";
 
-@Controller('/api/v1/category-admin')
+@Controller('/api/v1/admin/categories')
 export class CategoryAdminController {
   constructor(
     private readonly categoryService: CategoryAdminService
@@ -64,9 +64,9 @@ export class CategoryAdminController {
   })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
-  @Post('/create')
-  async createNewCategory(@Body() body: NewCategoryDto) {
-    const newCategory = await this.categoryService.createCategory(body)
+  @Post()
+  async createCategory(@Body() body: NewCategoryDto) {
+    const newCategory = await this.categoryService.createNewCategory(body)
 
     return newCategory
   }
@@ -108,9 +108,9 @@ export class CategoryAdminController {
   })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
-  @Get('/categories-list')
-  async getAllCategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
-    return await this.categoryService.getAllCategories(page)
+  @Get()
+  async getCategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
+    return await this.categoryService.findAllCategories(page)
   }
 
 
@@ -144,7 +144,7 @@ export class CategoryAdminController {
   })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
-  @Delete('/delete/:id')
+  @Delete(':id')
   async deleteCategory(@Param('id', ParseUUIDPipe) id: string){
     await this.categoryService.deleteCategoryById(id)
     return { deleteResult: true }
@@ -179,7 +179,7 @@ export class CategoryAdminController {
   })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
-  @Patch('/update/:id')
+  @Patch(':id')
   async updateCategory(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateCategoryDto){
     await this.categoryService.updateCategoryById(id, body)
     return { updateResult: true }

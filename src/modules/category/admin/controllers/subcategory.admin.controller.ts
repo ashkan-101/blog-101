@@ -8,7 +8,7 @@ import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 import { UpdateSubcategoryDto } from "../dtos/subcategory/update-subcategory.dto";
 
 
-@Controller('/api/v1/subcategory-admin')
+@Controller('/api/v1/admin/subcategories')
 export class SubcategoryAdminController {
   constructor(
     private readonly subcategoryAdminService: SubcategoryAdminService
@@ -40,9 +40,9 @@ export class SubcategoryAdminController {
   })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
-  @Post('/create')
-  async newSubcategory(@Body() body: NewSubcategoryDto){
-    const newSubcategory = await this.subcategoryAdminService.createSubcategory(body);
+  @Post()
+  async createSubcategory(@Body() body: NewSubcategoryDto){
+    const newSubcategory = await this.subcategoryAdminService.createNewSubcategory(body);
     return newSubcategory
   }
 
@@ -67,7 +67,7 @@ export class SubcategoryAdminController {
     status: 404,
     description: 'Category not found for the given categoryId',
   })
-  @Get('/subcategories/:categoryId')
+  @Get(':categoryId')
   async getSubcategoriesForCategory(@Param('categoryId', ParseUUIDPipe) categoryId: string){
     const subcategories = await this.subcategoryAdminService.getSubcategoriesByCategoryId(categoryId)
     return subcategories
@@ -93,7 +93,7 @@ export class SubcategoryAdminController {
   })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
-  @Delete('/delete/:id')
+  @Delete(':id')
   async deleteSubcategory(@Param('id', ParseUUIDPipe) id: string){
     await this.subcategoryAdminService.deleteSubcategoryById(id)
 
@@ -128,7 +128,7 @@ export class SubcategoryAdminController {
   })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
-  @Patch('/update/:id')
+  @Patch(':id')
   async updateSubcategory(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateSubcategoryDto){
     await this.subcategoryAdminService.updateSubcategoryById(id, body)
 

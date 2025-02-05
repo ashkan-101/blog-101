@@ -37,7 +37,7 @@ export class SubcategoryAdminService {
   }
 
   //-----------------------------------public methods
-  public async createSubcategory(params: NewSubcategoryDto) {
+  public async createNewSubcategory(params: NewSubcategoryDto) {
     await this.validateUniqueTitle(params.title)
     const category = await this.validateAndGetCategoryById(params.categoryId)
 

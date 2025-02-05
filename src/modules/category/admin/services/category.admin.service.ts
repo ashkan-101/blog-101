@@ -24,14 +24,14 @@ export class CategoryAdminService {
   }
 
   //------------------------------------public methods
-  public async createCategory(params: NewCategoryDto){
+  public async createNewCategory(params: NewCategoryDto){
     await this.validateUniqueTitle(params.title)
 
     const newCategory = this.categoryRepository.create(params)
     return await newCategory.save()
   }
 
-  public async getAllCategories(page: number){
+  public async findAllCategories(page: number){
     const pagination = paginateTool({page, take: 20})
 
     const [categories, totalCount] = await this.categoryRepository.findAndCount({
