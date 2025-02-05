@@ -1,10 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
-import { NewCategoryDto } from "../dtos/new-category.dto";
+import { NewCategoryDto } from "../dtos/category/new-category.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CategoryEntity } from "../../entities/category.entity";
 import { Repository } from "typeorm";
 import { paginateTool } from "src/common/utils/pagination";
-import { UpdateCategoryDto } from "../dtos/update-category.dto";
+import { UpdateCategoryDto } from "../dtos/category/update-category.dto";
 
 
 @Injectable()
@@ -55,5 +55,10 @@ export class CategoryAdminService {
     
     const updateResult = await this.categoryRepository.update({id: categoryId}, params)
     if(updateResult.affected === 0) throw new NotFoundException('not found any category with this ID')
+  }
+
+  //-----------------------------------export methods
+  public async findCategoryById(categoryId: string): Promise<null | CategoryEntity>{
+    return await this.categoryRepository.findOne({where: { id: categoryId }})
   }
 } 

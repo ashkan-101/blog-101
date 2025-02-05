@@ -7,14 +7,14 @@ import {
   Post, Query, UseGuards, 
   Patch
 } from "@nestjs/common";
-import { NewCategoryDto } from "../dtos/new-category.dto";
+import { NewCategoryDto } from "../dtos/category/new-category.dto";
 import { CategoryAdminService } from "../services/category.admin.service";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { CategoryEntity } from "../../entities/category.entity";
 import { JwtGuard } from "src/modules/auth/guards/jwt.guard";
 import { Role } from "src/common/decorators/Role";
 import { RoleGuard } from "src/common/guards/role.guard";
-import { UpdateCategoryDto } from "../dtos/update-category.dto";
+import { UpdateCategoryDto } from "../dtos/category/update-category.dto";
 
 @Controller('/api/v1/category-admin')
 export class CategoryAdminController {
