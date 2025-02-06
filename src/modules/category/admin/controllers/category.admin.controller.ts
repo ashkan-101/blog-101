@@ -62,6 +62,28 @@ export class CategoryAdminController {
       },
     },
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - JWT token is missing or invalid.',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: 'Unauthorized' },
+      }
+    }
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - User does not have the required role (admin, superadmin).',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 403 },
+        message: { type: 'string', example: 'Forbidden' },
+      }
+    }
+  })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
   @Post()
@@ -106,6 +128,28 @@ export class CategoryAdminController {
       },
     },
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - JWT token is missing or invalid.',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: 'Unauthorized' },
+      }
+    }
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - User does not have the required role (admin, superadmin).',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 403 },
+        message: { type: 'string', example: 'Forbidden' },
+      }
+    }
+  })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
   @Get()
@@ -142,6 +186,28 @@ export class CategoryAdminController {
     status: 404,
     description: 'Category not found with the provided ID.',
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - JWT token is missing or invalid.',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: 'Unauthorized' },
+      }
+    }
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - User does not have the required role (admin, superadmin).',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 403 },
+        message: { type: 'string', example: 'Forbidden' },
+      }
+    }
+  })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
   @Delete(':id')
@@ -176,6 +242,28 @@ export class CategoryAdminController {
   @ApiResponse({
     status: 409,
     description: 'Title already exists',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - JWT token is missing or invalid.',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: 'Unauthorized' },
+      }
+    }
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - User does not have the required role (admin, superadmin).',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 403 },
+        message: { type: 'string', example: 'Forbidden' },
+      }
+    }
   })
   @UseGuards(JwtGuard, RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])

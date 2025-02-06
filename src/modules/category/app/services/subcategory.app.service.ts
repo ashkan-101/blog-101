@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { SubcategoryEntity } from "../entities/subcategory.entity";
+import { SubcategoryEntity } from "../../entities/subcategory.entity";
 import { paginateTool } from "src/common/utils/pagination";
 
 @Injectable()
@@ -22,7 +22,16 @@ export class SubcategoryAppService {
 
     const [subcategories, totalCount] = await this.subcategoryRepository.findAndCount({
       order: {createdAt: 'DESC'},
-      take: pagination.take, skip: pagination.skip
+      take: pagination.take, skip: pagination.skip,
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        category: {
+          id: true,
+          title: true
+        }
+      }
     })
 
     return {
