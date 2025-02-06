@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { AdminEntity } from "./entities/admin.entity";
 import { Repository, QueryFailedError } from "typeorm";
@@ -49,6 +49,7 @@ export class AdminService{
     const admins = await this.adminRepository.find({
       order: { createdAt: 'DESC' },
       select: {
+        id: true,
         userName: true,
         email: true,
         avatar: true,
@@ -57,6 +58,27 @@ export class AdminService{
       }
     })
     return admins
+  }
+
+  public async findAdminById(id: string){
+
+    const admin = await this.adminRepository.find({
+      where: { id },
+      relations: [],   //added posts in relations
+      select: {
+        id: true,
+        userName: true,
+        email: true,
+        avatar: true,
+        role: true,
+        isActive: true,
+        //posts: true
+      }
+    })
+
+    if(!admin) throw new NotFoundException('not found any admin with this ID')
+
+    return admin
   }
 
   //---------------------------------export methods

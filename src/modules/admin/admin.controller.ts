@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from "@nestjs/common";
 import { AdminService } from "./admin.service";
 import { CreateAdminDto } from "./dtos/create-admin.dto";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
@@ -76,5 +76,12 @@ export class AdminController {
   async getAdmins(){
     const admins = await this.adminService.findAllAdmins()
     return admins
+  }
+
+  @Get(':id')
+  async getAdmin(@Param('id', ParseUUIDPipe) id: string){
+    const admin = await this.adminService.findAdminById(id)
+    
+    return admin
   }
 }
