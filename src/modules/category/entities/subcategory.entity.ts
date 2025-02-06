@@ -1,6 +1,7 @@
 import { BaseEntity } from "src/common/abstracts/base.entity";
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { CategoryEntity } from "./category.entity";
+import { PostEntity } from "src/modules/post/entities/post.entity";
 
 
 @Entity('subcategory')
@@ -13,8 +14,8 @@ export class SubcategoryEntity extends BaseEntity {
   @JoinColumn({name: 'category'})
   category!: CategoryEntity;
 
-  // @OneToMany(()=> PostPG, post => post.subcategory)
-  // posts!: IPostPG[];
+  @OneToMany(()=> PostEntity, post => post.subcategory)
+  posts!: PostEntity[];
 
   // @ManyToMany(()=> UserPG, user => user.favoriteSubcategories)
   // folowingUsers!: IUserPG[]
