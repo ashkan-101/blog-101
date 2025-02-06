@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from "@nestjs/common";
 import { AdminService } from "./admin.service";
 import { CreateAdminDto } from "./dtos/create-admin.dto";
-import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 
 
 @Controller('/api/v1/admins')
@@ -78,6 +78,38 @@ export class AdminController {
     return admins
   }
 
+  @ApiOperation({ summary: 'Get a single admin by ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'The unique identifier (UUID) of the admin to retrieve',
+    type: String,
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Admin details retrieved successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', example: '123e4567-e89b-12d3-a456-426614174000' },
+        userName: { type: 'string', example: 'adminUser123' },
+        email: { type: 'string', example: 'admin@example.com' },
+        avatar: { type: 'string', example: 'https://avatar.url/image.jpg' },
+        role: { type: 'string', example: 'admin' },
+        isActive: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Admin not found with the provided ID.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'not found any admin with this ID' },
+      },
+    },
+  })
   @Get(':id')
   async getAdmin(@Param('id', ParseUUIDPipe) id: string){
     const admin = await this.adminService.findAdminById(id)
