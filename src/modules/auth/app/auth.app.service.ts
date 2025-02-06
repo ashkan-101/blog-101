@@ -1,19 +1,19 @@
 import { BadRequestException, Injectable, HttpException, HttpStatus, NotFoundException } from "@nestjs/common";
-import { AuthFactory } from "./auth.factory";
+import { AuthAppFactory } from "./auth.app.factory";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { OtpEntity } from "./entities/otp.entity";
+import { OtpEntity } from "../entities/otp.entity";
 import { compareSync, hashSync } from 'bcrypt'
 import { randomInt } from "crypto";
-import { GenerateCode } from "./types/GenerateCode";
+import { GenerateCode } from "../types/GenerateCode";
 import { LoginUserDto } from "./dtos/login-user.dto";
 
 @Injectable()
-export class AuthService {
+export class AuthAppService {
   constructor(
     @InjectRepository(OtpEntity)
     private readonly otpRepository: Repository<OtpEntity>,
-    private readonly authFactory: AuthFactory
+    private readonly authAppFactory: AuthAppFactory
   ){}
 
   //-------------------------------private methods
@@ -70,8 +70,8 @@ export class AuthService {
   }
 
   public async returnUser(data: LoginUserDto){
-    const user = await this.authFactory.validateUserByMobile(data.mobile)
-    if(!user) return await this.authFactory.createNewUserByMobile(data.mobile)
+    const user = await this.authAppFactory.validateUserByMobile(data.mobile)
+    if(!user) return await this.authAppFactory.createNewUserByMobile(data.mobile)
     else return user
   }
 }

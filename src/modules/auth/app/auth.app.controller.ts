@@ -1,14 +1,14 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { AuthAppService } from "./auth.app.service";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { LoginUserDto } from "./dtos/login-user.dto";
 import { JwtService } from '@nestjs/jwt'
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 @Controller('/api/v1/auth')
-export class AuthController {
+export class AuthAppController {
   constructor(
-    private readonly authService: AuthService,
+    private readonly authAppService: AuthAppService,
     private readonly jwtService: JwtService
   ){}
 
@@ -60,7 +60,7 @@ export class AuthController {
   })
   @Post('/request-otp')
   async requestOtp(@Body() body: RegisterUserDto){
-    const otp = await this.authService.createOtp(body.mobile)
+    const otp = await this.authAppService.createOtp(body.mobile)
     return otp
   }
 
@@ -122,8 +122,8 @@ export class AuthController {
   })
   @Post('/signin')
   async signin(@Body() body: LoginUserDto){
-    await this.authService.verifyOtp(body)
-    const user = await this.authService.returnUser(body)
+    await this.authAppService.verifyOtp(body)
+    const user = await this.authAppService.returnUser(body)
 
     return { token: this.jwtService.sign({userId: user.id})}
   }

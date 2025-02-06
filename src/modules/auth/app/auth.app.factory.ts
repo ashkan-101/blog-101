@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { UserAppService } from "../user/app/user.app.service";
-import { IFindUserByMobile } from "../user/interfaces/IFindUserByMobile";
-import { ICreateUserByMobile } from '../user/interfaces/ICreateUserByMobile'
-import { IFindUserById } from "../user/interfaces/IFindUserById";
+import { UserAppService } from '../../user/app/user.app.service';
+import { IFindUserByMobile } from '../../user/interfaces/IFindUserByMobile'
+import { ICreateUserByMobile } from '../../user/interfaces/ICreateUserByMobile'
+import { IFindUserById } from "../../user/interfaces/IFindUserById";
 
 @Injectable()
-export class AuthFactory {
+export class AuthAppFactory {
   private readonly findUser: IFindUserByMobile & IFindUserById
   private readonly createUser: ICreateUserByMobile
   constructor(userAppService: UserAppService){
