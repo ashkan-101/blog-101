@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post } from "@nestjs/common";
 import { AdminService } from "./admin.service";
 import { CreateAdminDto } from "./dtos/create-admin.dto";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
@@ -9,8 +9,6 @@ export class AdminController {
   constructor(
     private readonly adminService: AdminService
   ){}
-
-
 
   @ApiOperation({ summary: 'Create new admin' })
   @ApiBody({
@@ -115,5 +113,12 @@ export class AdminController {
     const admin = await this.adminService.findAdminById(id)
     
     return admin
+  }
+
+  @Patch(':id/status')
+  async toggleAdminStatus(@Param('id', ParseUUIDPipe) id: string){
+    const updateAdmin = await this.adminService.toggleAdminStatusById(id)
+
+    return { updateResult: true}
   }
 }

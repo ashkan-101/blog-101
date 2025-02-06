@@ -81,5 +81,15 @@ export class AdminService{
     return admin
   }
 
+  public async toggleAdminStatusById(id: string){
+    const updateResult = await this.adminRepository.update(id, {
+      isActive: () => 'NOT isActive',
+    });
+  
+    if (updateResult.affected === 0) throw new NotFoundException('not found any admin with this ID');
+  }
+
+
+
   //---------------------------------export methods
 }
