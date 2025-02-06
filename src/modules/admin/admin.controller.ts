@@ -54,6 +54,24 @@ export class AdminController {
     }
   }
 
+  @ApiOperation({ summary: 'Get all admins' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of admins retrieved successfully.',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          userName: { type: 'string', example: 'adminUser123' },
+          email: { type: 'string', example: 'admin@example.com' },
+          avatar: { type: 'string', example: 'https://avatar.url/image.jpg' },
+          role: { type: 'string', example: 'admin' },
+          isActive: { type: 'boolean', example: true },
+        },
+      },
+    },
+  })
   @Get()
   async getAdmins(){
     const admins = await this.adminService.findAllAdmins()
