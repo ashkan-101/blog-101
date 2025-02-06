@@ -148,6 +148,33 @@ export class AdminController {
     return { updateResult: true}
   }
 
+  @ApiOperation({ summary: 'Delete an admin by ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'The unique identifier (UUID) of the admin to delete',
+    type: String,
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Admin deleted successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        deleteResult: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Admin not found with the provided ID.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'not found any admin with this ID' },
+      },
+    },
+  })
   @Delete(':id')
   async deleteAdmin(@Param('id', ParseUUIDPipe) id: string){
     await this.adminService.deleteAdminById(id)
