@@ -4,6 +4,7 @@ import { AdminEntity } from "./entities/admin.entity";
 import { Repository, QueryFailedError } from "typeorm";
 import { CreateAdminDto } from "./dtos/create-admin.dto";
 import { genSalt, hash } from 'bcrypt'
+import { UpdateAdminDto } from "./dtos/update-admin.dto";
 
 @Injectable()
 export class AdminService{
@@ -91,6 +92,18 @@ export class AdminService{
   public async deleteAdminById(id: string){
     const deleteResult = await this.adminRepository.delete({ id })
     if(deleteResult.affected === 0) throw new NotFoundException('not found any admin with dis ID')
+  }
+
+  public async updateAdminById(id: string, params: UpdateAdminDto){
+    try {
+      const updateResult = await this.adminRepository.update({id}, params)
+      if(updateResult.affected === 0) throw new NotFoundException('not found any admin with this ID')
+    } catch (error) {
+      if(error instanceof QueryFailedError && error.driverError.code === '23505'){
+        throw new BadRequestException('this userName or email already exist')
+      }
+      throw error
+    }
   }
 
   //---------------------------------export methods

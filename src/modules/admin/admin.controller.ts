@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from
 import { AdminService } from "./admin.service";
 import { CreateAdminDto } from "./dtos/create-admin.dto";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
+import { UpdateAdminDto } from "./dtos/update-admin.dto";
 
 
 @Controller('/api/v1/admins')
@@ -179,5 +180,11 @@ export class AdminController {
   async deleteAdmin(@Param('id', ParseUUIDPipe) id: string){
     await this.adminService.deleteAdminById(id)
     return { deleteResult: true }
+  }
+
+  @Patch(':id')
+  async updateAdmin(@Body() body: UpdateAdminDto, @Param('id', ParseUUIDPipe) id: string){
+    await this.adminService.updateAdminById(id, body)
+    return { updateResult: true }
   }
 }
