@@ -85,11 +85,13 @@ export class AdminService{
     const updateResult = await this.adminRepository.update(id, {
       isActive: () => 'NOT isActive',
     });
-  
     if (updateResult.affected === 0) throw new NotFoundException('not found any admin with this ID');
   }
 
-
+  public async deleteAdminById(id: string){
+    const deleteResult = await this.adminRepository.delete({ id })
+    if(deleteResult.affected === 0) throw new NotFoundException('not found any admin with dis ID')
+  }
 
   //---------------------------------export methods
 }
