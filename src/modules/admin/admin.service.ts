@@ -45,6 +45,19 @@ export class AdminService{
     }
   }
 
+  public async findAllAdmins(){
+    const admins = await this.adminRepository.find({
+      order: { createdAt: 'DESC' },
+      select: {
+        userName: true,
+        email: true,
+        avatar: true,
+        role: true,
+        isActive: true
+      }
+    })
+    return admins
+  }
 
   //---------------------------------export methods
 }

@@ -38,13 +38,7 @@ export class AdminController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Bad request due to password mismatch.',
-    schema: {
-      type: 'object',
-      properties: {
-        message: { type: 'string', example: 'The repeated password does not match the entered password' },
-      },
-    },
+    description: 'Bad request exception for mismatch password and repeat-password',
   })
   @Post()
   async createAdmin(@Body() body: CreateAdminDto){
@@ -58,5 +52,11 @@ export class AdminController {
       isActive: newAdmin.isActive,
       createdAt: newAdmin.createdAt
     }
+  }
+
+  @Get()
+  async getAdmins(){
+    const admins = await this.adminService.findAllAdmins()
+    return admins
   }
 }
