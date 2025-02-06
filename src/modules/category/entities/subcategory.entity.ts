@@ -14,8 +14,8 @@ export class SubcategoryEntity extends BaseEntity {
   @JoinColumn({name: 'category'})
   category!: CategoryEntity;
 
-  @OneToMany(()=> PostEntity, post => post.subcategory)
-  posts!: PostEntity[];
+  // @OneToMany(()=> PostEntity, post => post.subcategory)
+  // posts!: PostEntity[];
 
   // @ManyToMany(()=> UserPG, user => user.favoriteSubcategories)
   // folowingUsers!: IUserPG[]

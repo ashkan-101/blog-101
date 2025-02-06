@@ -5,10 +5,10 @@ import { AdminRole } from "../enums/AdminRole";
 
 @Entity('admin')
 export class AdminEntity extends BaseEntity {
-  @Column({type: 'varchar', nullable: false})
+  @Column({type: 'varchar', nullable: false, unique: true})
   userName: string
 
-  @Column({type: 'varchar', nullable: false})
+  @Column({type: 'varchar', nullable: false, unique: true})
   email: string
 
   @Column({type: 'varchar', nullable: false})
@@ -17,7 +17,7 @@ export class AdminEntity extends BaseEntity {
   @Column({type: 'varchar', nullable: true})
   avatar: string
 
-  @Column({type: 'enum', default: AdminRole.ADMIN})
+  @Column({type: 'varchar', default: AdminRole.ADMIN})
   role: AdminRole 
 
   @Column({type: 'boolean', default: true})

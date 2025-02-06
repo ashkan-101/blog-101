@@ -36,9 +36,9 @@ export class PostEntity extends BaseEntity{
   @Column({type: 'varchar', nullable: false})
   slug!: string;
 
-  @ManyToOne(()=> SubcategoryEntity, subcategory => subcategory.posts, {onDelete: 'CASCADE'})
-  @JoinColumn({name: 'subcategory'})
-  subcategory!: SubcategoryEntity;
+  // @ManyToOne(()=> SubcategoryEntity, subcategory => subcategory.posts, {onDelete: 'CASCADE'})
+  // @JoinColumn({name: 'subcategory'})
+  // subcategory!: SubcategoryEntity;
 
   // @OneToMany(()=> CommentPG, comment => comment.post)
   // comments!: ICommentPG[];
