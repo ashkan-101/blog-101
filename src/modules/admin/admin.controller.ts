@@ -115,6 +115,33 @@ export class AdminController {
     return admin
   }
 
+  @ApiOperation({ summary: 'Toggle the active status of an admin' })
+  @ApiParam({
+    name: 'id',
+    description: 'The unique identifier (UUID) of the admin to toggle the status',
+    type: String,
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Admin status toggled successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        updateResult: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Admin not found with the provided ID.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'not found any admin with this ID' },
+      },
+    },
+  })
   @Patch(':id/status')
   async toggleAdminStatus(@Param('id', ParseUUIDPipe) id: string){
     const updateAdmin = await this.adminService.toggleAdminStatusById(id)
