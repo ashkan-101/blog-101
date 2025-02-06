@@ -182,6 +182,47 @@ export class AdminController {
     return { deleteResult: true }
   }
 
+  @ApiOperation({ summary: 'Update an admin by ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'The unique identifier (UUID) of the admin to update',
+    type: String,
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiBody({
+    description: 'Admin data to update',
+    type: UpdateAdminDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Admin updated successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        updateResult: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Admin not found with the provided ID.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'not found any admin with this ID' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'UserName or email already exists.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'this userName or email already exist' },
+      },
+    },
+  })
   @Patch(':id')
   async updateAdmin(@Body() body: UpdateAdminDto, @Param('id', ParseUUIDPipe) id: string){
     await this.adminService.updateAdminById(id, body)
