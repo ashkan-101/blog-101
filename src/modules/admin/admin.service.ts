@@ -109,7 +109,7 @@ export class AdminService{
   //---------------------------------export methods
 
   public async findAdminByEmail(email: string){
-    return await this.adminRepository.find({
+    return await this.adminRepository.findOne({
       where: { email }
     })
   }

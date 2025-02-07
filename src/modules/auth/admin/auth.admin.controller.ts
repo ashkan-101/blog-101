@@ -8,13 +8,13 @@ import { JwtService } from "@nestjs/jwt";
 export class AuthAdminController{
   constructor(
     private readonly authAdminService: AuthAdminService,
-    private readonly jwtService: JwtService
+
   ){}
 
-  @Post('/signin-admins')
-  async signInAdmin(@Body() body: SignInAdminDto){
-    const adminId = await this.authAdminService.getAdminId(body)
+  @Post('/signin-admin')
+  async signIn(@Body() body: SignInAdminDto){
+    const jwt = await this.authAdminService.authenticateAdmin(body)
 
-    return { token: this.jwtService.sign({adminId})}
+    return { token: jwt }
   }
 }
