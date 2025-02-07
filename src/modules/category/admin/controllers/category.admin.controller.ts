@@ -11,7 +11,7 @@ import { NewCategoryDto } from "../dtos/category/new-category.dto";
 import { CategoryAdminService } from "../services/category.admin.service";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { CategoryEntity } from "../../entities/category.entity";
-import { JwtGuard } from "src/modules/auth/guards/jwt.guard";
+// import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
 import { SetAccessRoles } from "src/common/decorators/SetAccessRoles";
 import { RoleGuard } from "src/common/guards/role.guard";
 import { UpdateCategoryDto } from "../dtos/category/update-category.dto";
@@ -84,7 +84,7 @@ export class CategoryAdminController {
       }
     }
   })
-  @UseGuards(JwtGuard, RoleGuard)
+  @UseGuards( RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
   @Post()
   async createCategory(@Body() body: NewCategoryDto) {
@@ -150,7 +150,7 @@ export class CategoryAdminController {
       }
     }
   })
-  @UseGuards(JwtGuard, RoleGuard)
+  @UseGuards( RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
   @Get()
   async getCategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
@@ -208,7 +208,7 @@ export class CategoryAdminController {
       }
     }
   })
-  @UseGuards(JwtGuard, RoleGuard)
+  @UseGuards( RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
   @Delete(':id')
   async deleteCategory(@Param('id', ParseUUIDPipe) id: string){
@@ -265,7 +265,7 @@ export class CategoryAdminController {
       }
     }
   })
-  @UseGuards(JwtGuard, RoleGuard)
+  @UseGuards( RoleGuard)
   @SetAccessRoles(['admin', 'superadmin'])
   @Patch(':id')
   async updateCategory(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateCategoryDto){

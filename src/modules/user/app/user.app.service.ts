@@ -23,6 +23,8 @@ export class UserAppService {
   }
 
   public async findUserById(userId: string){
-    return await this.userRepository.findOne({where: { id: userId }})
+    const user = await this.userRepository.findOne({where: { id: userId }})
+    if(!user) throw new NotFoundException('not found any user with this Id')
+    return user
   }
 }

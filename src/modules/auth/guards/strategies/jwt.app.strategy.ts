@@ -1,14 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { PassportStrategy } from '@nestjs/passport'
-import { AuthFactory } from '../../auth.factory'
+import { AuthAppFactory } from '../../app/auth.app.factory'
 import { JwtPayload } from 'jsonwebtoken'
 import { config } from 'dotenv'
 config()
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy){
-  constructor(private readonly authFactory: AuthFactory){
+export class JwtAppStrategy extends PassportStrategy(Strategy, 'jwt-app'){
+  constructor(private readonly authAppFactory: AuthAppFactory){
     super({
       secretOrKey: process.env.JWT_SECRET as string,
       ignoreExpiration: false,
@@ -17,8 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy){
   }
 
   async validate(payload: JwtPayload) {
-    const user = await this.authFactory.findUserById(payload.id)
-    if(!user) throw new UnauthorizedException('Unauthorized!')
+    const user = await this.authAppFactory.findUserById(payload.id)
     return user
   }
 }
