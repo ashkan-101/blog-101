@@ -3,7 +3,7 @@ import { NewCategoryDto } from "../dtos/category/new-category.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CategoryEntity } from "../../entities/category.entity";
 import { Repository } from "typeorm";
-import { paginateTool } from "src/common/utils/pagination";
+import { paginateTool } from "src/common/utils/paginate.tool";
 import { UpdateCategoryDto } from "../dtos/category/update-category.dto";
 
 

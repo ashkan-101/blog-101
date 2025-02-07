@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { SubcategoryEntity } from "../../entities/subcategory.entity";
-import { paginateTool } from "src/common/utils/pagination";
+import { paginateTool } from "src/common/utils/paginate.tool";
 
 @Injectable()
 export class SubcategoryAppService {
