@@ -63,7 +63,7 @@ export class AdminService{
 
   public async findAdminById(id: string){
 
-    const admin = await this.adminRepository.find({
+    const admin = await this.adminRepository.findOne({
       where: { id },
       relations: [],   //added posts in relations
       select: {
@@ -106,11 +106,23 @@ export class AdminService{
     }
   }
 
-  //---------------------------------export methods
-
   public async findAdminByEmail(email: string){
-    return await this.adminRepository.findOne({
-      where: { email }
+    const admin = await this.adminRepository.findOne({
+      where: { email },
+      relations: [],   //added posts in relations
+      select: {
+        id: true,
+        userName: true,
+        email: true,
+        avatar: true,
+        role: true,
+        isActive: true,
+        //posts: true
+      }
     })
+
+    if(!admin) throw new NotFoundException('not found any admin with this email')
+    
+    return admin
   }
 }
