@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../entities/user.entity";
-import { RegisterUserDto } from "src/modules/auth/dtos/register-user.dto";
+import { RegisterUserDto } from "src/modules/auth/app/dtos/register-user.dto";
 
 @Injectable()
 export class UserAppService {
@@ -12,7 +12,9 @@ export class UserAppService {
   ){}
 
   public async findUserByMobile(mobile: string){
-    return await this.userRepository.findOne({where: {mobile}})
+    const user = await this.userRepository.findOne({where: {mobile}})
+    if(!user) throw new NotFoundException('not found any user with this mobile')
+    return user
   }
 
   public async createNewUserByMobile(mobile: string){
