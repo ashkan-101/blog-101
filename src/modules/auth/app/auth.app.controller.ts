@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { AuthAppService } from "./auth.app.service";
 import { RegisterUserDto } from "./dtos/register-user.dto";
-import { LoginUserDto } from "./dtos/login-user.dto";
+import { SignInUserDto } from "./dtos/signIn-user.dto";
 import { JwtService } from '@nestjs/jwt'
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
@@ -65,7 +65,7 @@ export class AuthAppController {
   }
 
   @ApiOperation({ summary: 'Sign in a user using OTP' })
-  @ApiBody({ type: LoginUserDto })
+  @ApiBody({ type: SignInUserDto })
   @ApiResponse({
     status: 200,
     description: 'User successfully signed in and JWT token issued',
@@ -121,7 +121,7 @@ export class AuthAppController {
     },
   })
   @Post('/signin')
-  async signin(@Body() body: LoginUserDto){
+  async signin(@Body() body: SignInUserDto){
     await this.authAppService.verifyOtp(body)
     const user = await this.authAppService.returnUser(body)
 

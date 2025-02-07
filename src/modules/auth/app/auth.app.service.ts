@@ -6,7 +6,7 @@ import { OtpEntity } from "../entities/otp.entity";
 import { compareSync, hashSync } from 'bcrypt'
 import { randomInt } from "crypto";
 import { GenerateCode } from "../types/GenerateCode";
-import { LoginUserDto } from "./dtos/login-user.dto";
+import { SignInUserDto } from "./dtos/signIn-user.dto";
 
 @Injectable()
 export class AuthAppService {
@@ -60,7 +60,7 @@ export class AuthAppService {
     return otpCode.generatedCode
   }
 
-  public async verifyOtp(data: LoginUserDto){
+  public async verifyOtp(data: SignInUserDto){
     const otp = await this.validateAndReturnOtp(data.mobile, data.otpCode)
 
     const otpExpiredResult = await this.validateOtpExpiry(otp)
@@ -69,7 +69,7 @@ export class AuthAppService {
     await this.otpRepository.delete({mobile: data.mobile , code: data.otpCode})
   }
 
-  public async returnUser(data: LoginUserDto){
+  public async returnUser(data: SignInUserDto){
     const user = await this.authAppFactory.validateUserByMobile(data.mobile)
     if(!user) return await this.authAppFactory.createNewUserByMobile(data.mobile)
     else return user
