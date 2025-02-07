@@ -1,11 +1,9 @@
 import { Controller, DefaultValuePipe, Get, ParseIntPipe, Query, UseGuards } from "@nestjs/common";
 import { SubcategoryAppService } from "../services/subcategory.app.service";
-import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
-import { SetAccessRoles } from "src/common/decorators/SetAccessRoles";
-import { RoleGuard } from "src/common/guards/role.guard";
 import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
 
-
+@UseGuards(JwtAppGuard)
 @Controller('/api/v1/subcategories')
 export class SubcategoryAppController {
   constructor(
@@ -64,8 +62,6 @@ export class SubcategoryAppController {
       }
     }
   })
-  // @UseGuards(JwtGuard, RoleGuard)
-  @SetAccessRoles(['admin', 'superadmin', 'user'])
   @Get()
   async getSubcategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
     const {totalPages, subcategories} = await this.subcategoryAppService.findAllSubcategories(page)

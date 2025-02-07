@@ -1,13 +1,12 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from "@nestjs/common";
 import { SubcategoryAdminService } from "../services/subcategory.admin.service";
 import { NewSubcategoryDto } from "../dtos/subcategory/new-subcategory.dto";
-// import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
-import { RoleGuard } from "src/common/guards/role.guard";
 import { SetAccessRoles } from "src/common/decorators/SetAccessRoles";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 import { UpdateSubcategoryDto } from "../dtos/subcategory/update-subcategory.dto";
+import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
 
-
+@UseGuards(JwtAdminGuard)
 @Controller('/api/v1/admin/subcategories')
 export class SubcategoryAdminController {
   constructor(
@@ -60,14 +59,11 @@ export class SubcategoryAdminController {
       }
     }
   })
-  // @UseGuards(JwtGuard, RoleGuard)
-  @SetAccessRoles(['admin', 'superadmin'])
   @Post()
   async createSubcategory(@Body() body: NewSubcategoryDto){
     const newSubcategory = await this.subcategoryAdminService.createNewSubcategory(body);
     return newSubcategory
   }
-
 
   @ApiOperation({ summary: 'Get all subcategories for a specific category' })
   @ApiParam({
@@ -111,8 +107,6 @@ export class SubcategoryAdminController {
       }
     }
   })
-  // @UseGuards(JwtGuard, RoleGuard)
-  @SetAccessRoles(['admin', 'superadmin'])
   @Get(':categoryId')
   async getSubcategoriesForCategory(@Param('categoryId', ParseUUIDPipe) categoryId: string){
     const subcategories = await this.subcategoryAdminService.getSubcategoriesByCategoryId(categoryId)
@@ -159,8 +153,6 @@ export class SubcategoryAdminController {
       }
     }
   })
-  // @UseGuards(JwtGuard, RoleGuard)
-  @SetAccessRoles(['admin', 'superadmin'])
   @Delete(':id')
   async deleteSubcategory(@Param('id', ParseUUIDPipe) id: string){
     await this.subcategoryAdminService.deleteSubcategoryById(id)
@@ -216,8 +208,6 @@ export class SubcategoryAdminController {
       }
     }
   })
-  // @UseGuards(JwtGuard, RoleGuard)
-  @SetAccessRoles(['admin', 'superadmin'])
   @Patch(':id')
   async updateSubcategory(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateSubcategoryDto){
     await this.subcategoryAdminService.updateSubcategoryById(id, body)

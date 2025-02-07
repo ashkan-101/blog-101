@@ -7,12 +7,13 @@ import { AuthModule } from "src/modules/auth/auth.module";
 import { SubcategoryAdminController } from "./controllers/subcategory.admin.controller";
 import { SubcategoryAdminService } from "./services/subcategory.admin.service";
 import { SubcategoryEntity } from "../entities/subcategory.entity";
+import { AuthAdminModule } from "src/modules/auth/admin/auth.admin.module";
 
 @Module({
   controllers: [CategoryAdminController, SubcategoryAdminController],
   providers: [CategoryAdminService, SubcategoryAdminService],
   imports: [
-    AuthModule,
+    AuthAdminModule,
     TypeOrmModule.forFeature([CategoryEntity, SubcategoryEntity]),
   ]
 })
