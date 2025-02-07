@@ -22,7 +22,9 @@ export class AuthAdminService{
   //------------------------------------public methods
   public async authenticateAdmin(params: SignInAdminDto): Promise<string>{
     const admin = await this.authAdminFactory.findAdminByEmail(params.email)
+
     await this.validatePassword(params.password, admin.password)
+
     return this.jwtService.sign({adminId: admin.id})
   }
 } 
