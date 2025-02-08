@@ -1,15 +1,16 @@
-import { Controller, Get, Param, Post, UploadedFile, UseInterceptors, Res, Delete, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Post, UploadedFile, UseInterceptors, Res, Delete, UseGuards, NotFoundException, StreamableFile } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Express, Response } from "express";
-import { join } from "path";
-import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
+import { join } from "path";
+
+import { PostImageService } from "./post.image.service";
 
 @Controller('/api/v1/posts/images')
 export class PostImagesController{
   constructor(
-    private readonly diskStorageService: LocalDiskStorageService
+    private readonly postImageService: PostImageService
   ){}
 
 
@@ -24,7 +25,8 @@ export class PostImagesController{
     description: 'Image successfully uploaded',
     schema: {
       example: {
-        imageName: 'post-image-12345.jpg',
+        imagePath: 'post-images',
+        imageName: '12345.jpg',
       },
     },
   })
@@ -32,19 +34,22 @@ export class PostImagesController{
   @UseInterceptors(FileInterceptor('postImage'))
   @Post('/admin')
   async uploadImage(@UploadedFile() image: Express.Multer.File){
-    const imageName = await this.diskStorageService.upload(image, { path: 'post-images', prefix: 'post-image-'})
-    return imageName
+    const imagePath = await this.postImageService.saveImageAndReturnPath(image)
+    return { 
+      imagePath
+    }
   }
 
-  @Get('/:imageName')
-  async getImage (@Param('imageName') imageName: string, @Res() res: Response){
-    return res.sendFile(join(process.cwd(), 'uploads', 'post-images', imageName))
+  @Get('/:path/:name')
+  async getImage (@Param('path') imagePath: string, @Param('name') imageName: string, @Res() res: Response){
+    const fileInformation = await this.postImageService.getImageInformation(imagePath, imageName)
+    return res.setHeader('Content-Type', fileInformation.mimeType).send(fileInformation.buffer)
   }
 
   @UseGuards(JwtAdminGuard)
-  @Delete('/admin/:imageName')
-  async deleteImage(@Param('imageName') imageName: string){
-    await this.diskStorageService.deleteFile(join('post-images', imageName))
+  @Delete('/admin/:path/:name')
+  async deleteImage(@Param('path') imagePath: string, @Param('name') imageName: string){
+    await this.postImageService.deleteImage(imagePath, imageName)
     return { deleteResult: true }
   }
 }

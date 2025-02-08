@@ -10,7 +10,7 @@ config()
 export class LocalDiskStorageService extends StorageService{
   private readonly uploadDir = join(process.cwd(), 'uploads');
 
-  async upload(file: Express.Multer.File, options: { path: string; prefix?: string }): Promise<{ imageName: string }> {
+  async upload(file: Express.Multer.File, options: { path: string; prefix?: string }): Promise<{ imagePath: string, imageName: string }> {
     if(!file) throw new BadRequestException('please entered a file')
 
     const fileExt = extname(file.originalname); 
@@ -18,23 +18,19 @@ export class LocalDiskStorageService extends StorageService{
 
     const fullPath = join(this.uploadDir, options.path, fileName);
 
-    const publicPath = join(options.path, fileName).replace(/\\/g, '/');
+    // const publicPath = join(options.path, fileName).replace(/\\/g, '/');
 
     await fs.promises.mkdir(join(this.uploadDir, options.path), { recursive: true });
-
     await fs.promises.writeFile(fullPath, file.buffer);
 
     return {
+      imagePath: options.path,
       imageName: fileName
     };
   }
 
-  // public getFileUrl(path: string): string {
-  //   return `${process.env.APP_URL}:${process.env.APP_PORT}/uploads/${path}`;
-  // }
-
-  async deleteFile(filePath: string): Promise<void> {
-    const fullPath = join(process.cwd(), 'uploads', filePath);
+  async deleteFile(filePath: string, fileName: string): Promise<void> {
+    const fullPath = join(this.uploadDir, filePath, fileName);
     try {
       await fs.promises.unlink(fullPath); 
     } catch (error) {
@@ -42,6 +38,19 @@ export class LocalDiskStorageService extends StorageService{
     }
   }
 
+  async readFile(filePath: string, fileName: string){
+    const fullPath = join(this.uploadDir, filePath, fileName);
+    try { 
+      return await fs.promises.readFile(fullPath)
+    } catch (error) {
+      throw new NotFoundException('file not Found')
+    }
+  }
+
+
+  // public getFileUrl(path: string): string {
+  //   return `${process.env.APP_URL}:${process.env.APP_PORT}/uploads/${path}`;
+  // }
 
   // async moveFile(sourcePath: string, destinationPath: string): Promise<void> {
   //   try {
