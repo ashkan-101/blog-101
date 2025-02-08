@@ -22,7 +22,7 @@ export class PostEntity extends BaseEntity{
   @Column({type: 'varchar', length: 170, nullable: true})
   metaDescription: string;
 
-  @Column({type: 'varchar', nullable: true})
+  @Column({type: 'jsonb'})
   thumbnail: {position: number, imagePath: string, imageName: string};
 
   @Column({type: 'varchar', nullable: true})

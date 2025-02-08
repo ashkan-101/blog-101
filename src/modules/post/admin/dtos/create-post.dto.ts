@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsArray, IsInt, IsObject, IsOptional, ValidateNested, IsDefined, ArrayNotEmpty, Matches } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray, IsInt, IsObject, IsOptional, ValidateNested, IsDefined, ArrayNotEmpty, Matches, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
@@ -72,4 +72,10 @@ export class CreatePostDto {
     type: [String],
   })
   tags: string[];
+
+  @IsNotEmpty()
+  @IsString()
+  @IsUUID()
+  @ApiProperty({type: String, required: true, description: 'subcategory uuid for relation post'})
+  subcategory: string
 }
