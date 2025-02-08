@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Post, UploadedFile, UseInterceptors, Res, Delete, UseGuards } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Express, Response } from "express";
 import { join } from "path";
 import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
@@ -11,6 +12,22 @@ export class PostImagesController{
     private readonly diskStorageService: LocalDiskStorageService
   ){}
 
+
+  @ApiOperation({ summary: 'Upload an image for a post by admin' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'The image to upload _ fieldName: postImage',
+    type: 'multipart/form-data',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Image successfully uploaded',
+    schema: {
+      example: {
+        imageName: 'post-image-12345.jpg',
+      },
+    },
+  })
   @UseGuards(JwtAdminGuard)
   @UseInterceptors(FileInterceptor('postImage'))
   @Post('/admin')
