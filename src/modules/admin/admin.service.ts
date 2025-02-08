@@ -117,6 +117,7 @@ export class AdminService{
         avatar: true,
         role: true,
         isActive: true,
+        password: true
         //posts: true
       }
     })

@@ -23,6 +23,8 @@ export class AuthAdminService{
   public async authenticateAdmin(params: SignInAdminDto): Promise<string>{
     const admin = await this.authAdminFactory.findAdminByEmail(params.email)
 
+    if(!admin) throw new NotFoundException('not found any account with this email')
+      
     await this.validatePassword(params.password, admin.password)
 
     return this.jwtService.sign({adminId: admin.id})

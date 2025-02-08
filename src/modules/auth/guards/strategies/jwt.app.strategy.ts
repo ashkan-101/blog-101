@@ -4,6 +4,7 @@ import { PassportStrategy } from '@nestjs/passport'
 import { AuthAppFactory } from '../../app/auth.app.factory'
 import { JwtPayload } from 'jsonwebtoken'
 import { config } from 'dotenv'
+import { IUserEntity } from 'src/modules/user/interfaces/IUser.Entity'
 config()
 
 @Injectable()
@@ -17,7 +18,9 @@ export class JwtAppStrategy extends PassportStrategy(Strategy, 'jwt-app'){
   }
 
   async validate(payload: JwtPayload) {
-    const user = await this.authAppFactory.findUserById(payload.id)
+    if(!payload.userId) throw new UnauthorizedException('Unauthorized')
+    const user = await this.authAppFactory.findUserById(payload.userId)
+    if(!user) throw new UnauthorizedException('Unauthorized')
     return user
   }
 }
