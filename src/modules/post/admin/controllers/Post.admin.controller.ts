@@ -38,5 +38,9 @@ export class PostAdminController{
     return { newPost }
   }
 
-
+  @Get(':id')
+  async getPost(@Param('id', ParseUUIDPipe) postId: string){
+    const post = await this.postAdminService.findPostById(postId)
+    return { post }
+  }
 }

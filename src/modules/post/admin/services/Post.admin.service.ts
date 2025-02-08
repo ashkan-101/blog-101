@@ -41,5 +41,14 @@ export class PostAdminService{
     return await newPost.save()
   }
 
-  
+  public async findPostById(postId: string){
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: ['author', 'subcategory', 'subcategory.category'],
+    })
+    
+    if(!post) throw new NotFoundException('not found anu post with this id')
+    
+    return post
+  }
 }
