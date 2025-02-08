@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Req, UseGuards } fro
 import { PostAdminService } from "../services/Post.admin.service";
 import { CreatePostDto } from "../dtos/create-post.dto";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
-import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 import { PostEntity } from "../../entities/post.entity";
 
 
@@ -38,6 +38,22 @@ export class PostAdminController{
     return { newPost }
   }
 
+  @ApiOperation({ summary: 'Get a post by its ID -- admin' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Unique identifier for the post (UUID)',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved the post.',
+    type: PostEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Post not found.',
+  })
   @Get(':id')
   async getPost(@Param('id', ParseUUIDPipe) postId: string){
     const post = await this.postAdminService.findPostById(postId)
