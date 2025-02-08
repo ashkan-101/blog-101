@@ -1,4 +1,4 @@
-import { Injectable, UnsupportedMediaTypeException } from "@nestjs/common";
+import { BadRequestException, Injectable, UnsupportedMediaTypeException } from "@nestjs/common";
 import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
 import { contentType } from 'mime-types'
 
@@ -17,9 +17,14 @@ export class PostImageService{
   }
 
   ///-------------------------------public methods
-  public async saveImageAndReturnPath(file: Express.Multer.File){
-    const saveFile = await this.diskStorageService.upload(file, { path: process.env.POST_IMAGES as string})
-    return saveFile
+  public async saveImageAndReturnPath(files: { thumbnail?: Express.Multer.File[], postImage?: Express.Multer.File[] }){
+    if(files.postImage){
+      return await this.diskStorageService.upload(files.postImage[0], { path: process.env.POST_IMAGES as string})
+    }else if(files.thumbnail){
+      return await this.diskStorageService.upload(files.thumbnail[0], { path: process.env.THUMBNAILS as string})
+    }else{
+      throw new BadRequestException('please send a image')
+    }
   }
 
   public async getImageInformations(imagePath: string ,imageName: string){

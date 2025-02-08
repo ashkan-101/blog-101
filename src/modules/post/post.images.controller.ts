@@ -1,11 +1,9 @@
-import { Controller, Get, Param, Post, UploadedFile, UseInterceptors, Res, Delete, UseGuards, NotFoundException, StreamableFile } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { Controller, Get, Param, Post, UseInterceptors, Res, Delete, UseGuards, UploadedFiles } from "@nestjs/common";
 import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
-import { Express, Response } from "express";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
-import { join } from "path";
-
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { PostImageService } from "./post.image.service";
+import { Response } from "express";
 
 @Controller('/api/v1/posts/images')
 export class PostImagesController{
@@ -14,27 +12,50 @@ export class PostImagesController{
   ){}
 
 
-  @ApiOperation({ summary: 'Upload an image for a post by admin' })
-  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Upload thumbnail and post image by admin' })
+  @ApiConsumes('multipart/form-data')  // This indicates that the request will contain form-data
   @ApiBody({
-    description: 'The image to upload _ fieldName: postImage',
+    description: 'Upload a thumbnail and a post image.',
     type: 'multipart/form-data',
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Image successfully uploaded',
     schema: {
-      example: {
-        imagePath: 'post-images',
-        imageName: '12345.jpg',
+      type: 'object',
+      properties: {
+        thumbnail: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        postImage: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
       },
     },
   })
+  @ApiResponse({
+    status: 200,
+    description: 'Images uploaded successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        imagePath: { type: 'object', example: {imagePath: "string", imageName: 'string'} },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input or file format.',
+  })
   @UseGuards(JwtAdminGuard)
-  @UseInterceptors(FileInterceptor('postImage'))
+  @UseInterceptors(FileFieldsInterceptor([{name: 'thumbnail'},{name: 'postImage'}]))
   @Post('/admin')
-  async uploadImage(@UploadedFile() image: Express.Multer.File){
-    const imagePath = await this.postImageService.saveImageAndReturnPath(image)
+  async uploadImage(@UploadedFiles() files: { thumbnail?: Express.Multer.File[], postImage?: Express.Multer.File[] }){
+    const imagePath = await this.postImageService.saveImageAndReturnPath(files)
     return { 
       imagePath
     }
