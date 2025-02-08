@@ -75,4 +75,8 @@ export class SubcategoryAdminService {
     if(updateResult.affected === 0) throw new NotFoundException('not found any subcategory with this Id')
   }
   //------------------------------------export methods
+
+  public async findSubcategoryById(id: string){
+    return await this.subcategoryRepository.findOne({where: { id }})
+  }
 }

@@ -15,6 +15,7 @@ import { AuthAdminModule } from "src/modules/auth/admin/auth.admin.module";
   imports: [
     AuthAdminModule,
     TypeOrmModule.forFeature([CategoryEntity, SubcategoryEntity]),
-  ]
+  ],
+  exports: [SubcategoryAdminService]
 })
 export class CategoryAdminModule {}
