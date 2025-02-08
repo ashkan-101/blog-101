@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { extname, join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
@@ -10,7 +10,7 @@ config()
 export class LocalDiskStorageService extends StorageService{
   private readonly uploadDir = join(process.cwd(), 'uploads');
 
-  async upload(file: Express.Multer.File, options: { path: string; prefix?: string }): Promise<{ path: string; url: string }> {
+  async upload(file: Express.Multer.File, options: { path: string; prefix?: string }): Promise<{ imageName: string }> {
     if(!file) throw new BadRequestException('please entered a file')
 
     const fileExt = extname(file.originalname); 
@@ -25,30 +25,29 @@ export class LocalDiskStorageService extends StorageService{
     await fs.promises.writeFile(fullPath, file.buffer);
 
     return {
-      path: publicPath, 
-      url: this.getFileUrl(publicPath),
+      imageName: fileName
     };
   }
 
-  public getFileUrl(path: string): string {
-    return `${process.env.APP_URL}:${process.env.APP_PORT}/uploads/${path}`;
-  }
+  // public getFileUrl(path: string): string {
+  //   return `${process.env.APP_URL}:${process.env.APP_PORT}/uploads/${path}`;
+  // }
 
   async deleteFile(filePath: string): Promise<void> {
     const fullPath = join(process.cwd(), 'uploads', filePath);
     try {
       await fs.promises.unlink(fullPath); 
     } catch (error) {
-      throw new Error(`Failed to delete file: ${filePath}`);
+      throw new NotFoundException('File not found');
     }
   }
 
 
-  async moveFile(sourcePath: string, destinationPath: string): Promise<void> {
-    try {
-      await fs.promises.rename(sourcePath, destinationPath);
-    } catch (error) {
-      throw new Error(`Failed to move file from ${sourcePath} to ${destinationPath}`);
-    }
-  }
+  // async moveFile(sourcePath: string, destinationPath: string): Promise<void> {
+  //   try {
+  //     await fs.promises.rename(sourcePath, destinationPath);
+  //   } catch (error) {
+  //     throw new Error(`Failed to move file from ${sourcePath} to ${destinationPath}`);
+  //   }
+  // }
 }
