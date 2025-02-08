@@ -1,6 +1,7 @@
 import { BaseEntity } from "src/common/abstracts/base.entity";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { AdminRole } from "../enums/AdminRole";
+import { PostEntity } from "src/modules/post/entities/post.entity";
 
 
 @Entity('admin')
@@ -23,5 +24,7 @@ export class AdminEntity extends BaseEntity {
   @Column({type: 'boolean', default: true})
   isActive: boolean
 
-  // posts
+  @OneToMany(() => PostEntity, post => post.author)
+  posts: PostEntity[]
+
 }
