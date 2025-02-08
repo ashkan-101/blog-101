@@ -10,9 +10,9 @@ export class PostImageService{
   //--------------------------------private methods
   private async validateImageMimeType(imageName: string){
     const mimeType = contentType(imageName)
-    if(!mimeType) throw new UnsupportedMediaTypeException('please entered imageName')
+    if(!mimeType) throw new UnsupportedMediaTypeException('Unsupported media type')
     const type = mimeType.split('/')[0]
-    if(type !== 'image') throw new UnsupportedMediaTypeException('please entered image')
+    if(type !== 'image') throw new UnsupportedMediaTypeException('Unsupported media type')
     return mimeType
   }
 
@@ -22,7 +22,7 @@ export class PostImageService{
     return saveFile
   }
 
-  public async getImageInformation(imagePath: string ,imageName: string){
+  public async getImageInformations(imagePath: string ,imageName: string){
     const mimeType = await this.validateImageMimeType(imageName)
     const buffer = await this.diskStorageService.readFile(imagePath, imageName)
     return {

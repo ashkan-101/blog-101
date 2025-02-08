@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Post, UploadedFile, UseInterceptors, Res, Delete, UseGuards, NotFoundException, StreamableFile } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 import { Express, Response } from "express";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
 import { join } from "path";
@@ -40,12 +40,48 @@ export class PostImagesController{
     }
   }
 
+  @ApiOperation({ summary: 'Retrieve image by path and name' })
+  @ApiParam({ name: 'path', description: 'Path to the image', type: String })
+  @ApiParam({ name: 'name', description: 'Image file name', type: String })
+  @ApiResponse({
+    status: 200,
+    description: 'The image file has been successfully retrieved.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Image not found.',
+  })
+  @ApiResponse({
+    status: 415,
+    description: 'Unsupported media type.',
+  })
   @Get('/:path/:name')
   async getImage (@Param('path') imagePath: string, @Param('name') imageName: string, @Res() res: Response){
-    const fileInformation = await this.postImageService.getImageInformation(imagePath, imageName)
+    const fileInformation = await this.postImageService.getImageInformations(imagePath, imageName)
     return res.setHeader('Content-Type', fileInformation.mimeType).send(fileInformation.buffer)
   }
 
+  @ApiOperation({ summary: 'Delete an image by path and name -- admin' })
+  @ApiParam({ name: 'path', description: 'Path to the image', type: String })
+  @ApiParam({ name: 'name', description: 'Image file name', type: String })
+  @ApiResponse({
+    status: 200,
+    description: 'Image successfully deleted.',
+    schema: {
+      type: 'object',
+      properties: {
+        deleteResult: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Image not found.',
+  })
+  @ApiResponse({
+    status: 415,
+    description: 'Unsupported media type.',
+  })
   @UseGuards(JwtAdminGuard)
   @Delete('/admin/:path/:name')
   async deleteImage(@Param('path') imagePath: string, @Param('name') imageName: string){
