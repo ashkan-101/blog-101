@@ -79,10 +79,28 @@ export class PostAppController {
     return { post }
   }
 
+  @ApiOperation({
+    summary: 'Increment view count of a post',
+    description: 'Increments the view count of a post by 1. Returns an error if the post is not found.'
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'The UUID of the post to update the view count for.',
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully updated the view count of the post.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Post not found with the given ID.',
+  })
+  @UseGuards(JwtAppGuard)
   @Patch(':id')
   async addViewCount(@Param('id', ParseUUIDPipe) id: string){
     await this.postAppService.updatePostViewsById(id)
-
     return { result: true }
   }
 }
