@@ -5,6 +5,8 @@ import { Repository } from "typeorm";
 import { CreatePostDto } from "../dtos/create-post.dto";
 import { AdminEntity } from "src/modules/admin/entities/admin.entity";
 import { PostAdminFactory } from "../post.admin.factory";
+import { PostSorting } from "../../enums/Post.Sorting";
+import { paginateTool } from "src/common/utils/paginate.tool";
 
 @Injectable()
 export class PostAdminService{
@@ -50,5 +52,27 @@ export class PostAdminService{
     if(!post) throw new NotFoundException('not found anu post with this id')
     
     return post
+  }
+
+  public async getAllPosts(page: number, sorting: PostSorting){
+    const pagination = paginateTool({page, take: 20})
+
+    const queryBuilder = this.postRepository.createQueryBuilder('post');
+
+    if(sorting === PostSorting.NEWEST) queryBuilder.orderBy('post.createdAt', 'DESC')
+    if(sorting === PostSorting.POPULAR) queryBuilder.orderBy('post.views', 'DESC')
+
+    const [posts, totalCount] = await queryBuilder
+      .leftJoinAndSelect('post.author', 'author')
+      .leftJoinAndSelect('post.subcategory', 'subcategory')
+      .leftJoinAndSelect('subcategory.category', 'category')
+      .skip(pagination.skip)
+      .take(pagination.take)
+      .getManyAndCount()
+
+      return {
+        totalPages: Math.ceil(totalCount / pagination.take),
+        posts
+      }
   }
 }

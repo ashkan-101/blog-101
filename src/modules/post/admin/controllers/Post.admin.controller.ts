@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Req, UseGuards } from "@nestjs/common";
-import { PostAdminService } from "../services/Post.admin.service";
+import { BadRequestException, Body, Controller, DefaultValuePipe, Get, Param, ParseEnumPipe, ParseIntPipe, ParseUUIDPipe, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { PostAdminService } from "../services/post.admin.service";
 import { CreatePostDto } from "../dtos/create-post.dto";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 import { PostEntity } from "../../entities/post.entity";
+import { PostSorting } from "../../enums/Post.Sorting";
 
 
 @Controller('/api/v1/admin/posts')
@@ -58,5 +59,15 @@ export class PostAdminController{
   async getPost(@Param('id', ParseUUIDPipe) postId: string){
     const post = await this.postAdminService.findPostById(postId)
     return { post }
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @Get()
+  async getPosts(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('sortingBy', new DefaultValuePipe(PostSorting.POPULAR)) sortingBy: PostSorting
+  ){
+    const posts = await this.postAdminService.getAllPosts(page, sortingBy)
+    return { posts }
   }
 }
