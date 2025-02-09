@@ -5,11 +5,12 @@ import { LocalDiskStorageService } from "src/common/services/storage/localDiskSt
 import { MulterModule } from "@nestjs/platform-express";
 import { multerOptions } from "src/common/configs/multer/multerConfig";
 import { PostImageService } from "./post.image.service";
+import { PostAppModule } from "./app/post.app.module";
 
 @Module({
   controllers: [PostImagesController],
   imports: [
-    PostAdminModule,
+    PostAdminModule, PostAppModule,
     MulterModule.register(multerOptions),
   ],
   providers: [LocalDiskStorageService, PostImageService]
