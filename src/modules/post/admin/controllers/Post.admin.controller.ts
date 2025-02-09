@@ -97,6 +97,31 @@ export class PostAdminController{
     return { posts }
   }
 
+  @ApiOperation({
+    summary: 'Delete a post by its ID',
+    description: 'Deletes a post if the requester is the author of the post.',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'ID of the post to be deleted (UUID format)',
+    type: String,
+    example: 'd12345d3-4567-890a-bcde-fghijklmn012',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Post deleted successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        deleteResult: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Post not found or not authorized to delete',
+  })
   @UseGuards(JwtAdminGuard)
   @Delete(':id')
   async deletePost(@Param('id', ParseUUIDPipe) id: string, @Req() req){
