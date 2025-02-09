@@ -159,6 +159,33 @@ export class PostAdminController{
     return { posts }
   }
 
+  @ApiOperation({
+    summary: 'Update an existing post',
+    description: 'This endpoint allows an admin to update a post by its ID. The admin must be the author of the post.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'ID of the post to be updated (UUID format)',
+  })
+  @ApiBody({
+    type: UpdatePostDto,
+    description: 'The updated data for the post. The fields in the body should match the post properties to be updated.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The post was successfully updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        updateResult: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Post not found with the given ID or you are not the author of this post.',
+  })
   @UseGuards(JwtAdminGuard)
   @Put(':id')
   async updatePost(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdatePostDto, @Req() req){
