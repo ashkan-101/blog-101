@@ -12,7 +12,6 @@ export class PostAppController {
     private readonly postAppService: PostAppService
   ){}
 
-
   @ApiOperation({
     summary: 'Get all posts with pagination and sorting options',
     description: 'This endpoint returns a paginated list of posts with the option to sort by popularity or creation date.',
@@ -70,8 +69,32 @@ export class PostAppController {
   })
   @UseGuards(JwtAppGuard)
   @Get(':id')
-  async getPost(@Param('id', ParseUUIDPipe) id: string){
+  async getPostById(@Param('id', ParseUUIDPipe) id: string){
     const post = await this.postAppService.findPostById(id)
+    return { post }
+  }
+
+  @ApiOperation({
+    summary: 'Get a post by its slug',
+    description: 'This endpoint retrieves a post using its unique slug identifier. It returns the post details along with the author, subcategory, and category information.',
+  })
+  @ApiParam({
+    name: 'slug',
+    type: String,
+    description: 'The unique slug identifier of the post',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The post details including author, subcategory, and category information',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Post not found with the provided slug',
+  })
+  @UseGuards(JwtAppGuard)
+  @Get('/slug/:slug')
+  async getPostBySlug(@Param('slug') slug: string){
+    const post = await this.postAppService.findPostBySlug(slug)
     return { post }
   }
 }

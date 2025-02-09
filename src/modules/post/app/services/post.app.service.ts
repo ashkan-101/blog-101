@@ -64,4 +64,26 @@ export class PostAppService {
 
     return post
   }
+
+  public async findPostBySlug(slug: string){
+    const post = await this.postRepository.findOne({
+      where: { slug },
+      relations: ['author', 'subcategory', 'subcategory.category'],
+      select: {
+        author: {
+          userName: true,
+          email: true,
+          avatar: true,
+          role: true,
+          isActive: true,
+          createdAt: true,
+          id: true
+        }
+      }
+    })
+
+    if(!post) throw new NotFoundException('not found any post with this slug')
+
+    return post
+  }
 }
