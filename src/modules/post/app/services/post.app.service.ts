@@ -1,8 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PostEntity } from "../../entities/post.entity";
 import { Repository } from "typeorm";
-import { UserEntity } from "src/modules/user/entities/user.entity";
 import { PostAppFactory } from "../post.app.factory";
 import { paginateTool } from "src/common/utils/paginate.tool";
 import { PostSorting } from "../../enums/Post.Sorting";
@@ -12,7 +11,7 @@ import { PostSorting } from "../../enums/Post.Sorting";
 export class PostAppService {
   constructor(
     @InjectRepository(PostEntity)
-    private readonly postRepository: Repository<UserEntity>,
+    private readonly postRepository: Repository<PostEntity>,
     private readonly postAppFactory: PostAppFactory
   ){}
 
@@ -42,5 +41,27 @@ export class PostAppService {
         totalPages: Math.ceil(totalCount / pagination.take),
         posts
       }
+  }
+
+  public async findPostById(postId: string){
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: ['author', 'subcategory', 'subcategory.category'],
+      select: {
+        author: {
+          userName: true,
+          email: true,
+          avatar: true,
+          role: true,
+          isActive: true,
+          createdAt: true,
+          id: true
+        }
+      }
+    })
+
+    if(!post) throw new NotFoundException('not found any post with this Id')
+
+    return post
   }
 }

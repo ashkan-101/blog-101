@@ -1,11 +1,12 @@
-import { Controller, DefaultValuePipe, Get, ParseIntPipe, Query, UseGuards } from "@nestjs/common";
+import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Query, UseGuards } from "@nestjs/common";
 import { PostAppService } from "../services/post.app.service";
 import { PostSorting } from "../../enums/Post.Sorting";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
 import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
 
 
-@Controller()
+@Controller('/api/v1/posts')
 export class PostAppController {
   constructor(
     private readonly postAppService: PostAppService
@@ -37,7 +38,7 @@ export class PostAppController {
     status: 400,
     description: 'Invalid query parameters for pagination or sorting.',
   })
-  @UseGuards(JwtAppGuard)
+  @UseGuards(JwtAdminGuard)
   @Get()
   async getPosts(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -48,5 +49,12 @@ export class PostAppController {
       totalPages,
       posts
      }
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @Get(':id')
+  async getPost(@Param('id', ParseUUIDPipe) id: string){
+    const post = await this.postAppService.findPostById(id)
+    return { post }
   }
 }
