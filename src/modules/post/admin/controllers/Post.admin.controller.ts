@@ -131,6 +131,25 @@ export class PostAdminController{
     return { deleteResult: true }
   }
 
+  @ApiOperation({
+    summary: 'Retrieve posts by a specific author',
+    description: 'Fetches a list of posts authored by the admin with the provided author ID.',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'ID of the author (UUID format)',
+    type: String,
+    example: 'd12345d3-4567-890a-bcde-fghijklmn012',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Posts retrieved successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No posts found for the given author ID',
+  })
   @UseGuards(JwtAdminGuard)
   @Get('/author/:id')
   async getAuthorPosts(@Param('id', ParseUUIDPipe) authorId: string){
