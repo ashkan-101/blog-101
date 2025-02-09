@@ -1,8 +1,8 @@
-import { BadRequestException, Body, Controller, DefaultValuePipe, Get, Param, ParseEnumPipe, ParseIntPipe, ParseUUIDPipe, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { PostAdminService } from "../services/post.admin.service";
 import { CreatePostDto } from "../dtos/create-post.dto";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
-import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { PostEntity } from "../../entities/post.entity";
 import { PostSorting } from "../../enums/Post.Sorting";
 
@@ -61,6 +61,32 @@ export class PostAdminController{
     return { post }
   }
 
+  @ApiOperation({
+    summary: 'Retrieve all posts with pagination and sorting options',
+    description: 'Fetches a list of posts based on the given page and sorting criteria (by popularity or newest)',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number for pagination (default: 1)',
+    type: Number,
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'sortingBy',
+    required: false,
+    description: 'Sorting criteria for the posts (default: POPULAR)',
+    enum: PostSorting,
+    example: PostSorting.POPULAR,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched posts',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid query parameters',
+  })
   @UseGuards(JwtAdminGuard)
   @Get()
   async getPosts(
