@@ -2,7 +2,7 @@ import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, 
 import { PostAppService } from "../services/post.app.service";
 import { PostSorting } from "../../enums/Post.Sorting";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
-import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
 
 
@@ -38,7 +38,7 @@ export class PostAppController {
     status: 400,
     description: 'Invalid query parameters for pagination or sorting.',
   })
-  @UseGuards(JwtAdminGuard)
+  @UseGuards(JwtAppGuard)
   @Get()
   async getPosts(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -51,7 +51,24 @@ export class PostAppController {
      }
   }
 
-  @UseGuards(JwtAdminGuard)
+  @ApiOperation({
+    summary: 'Get a single post by its ID',
+    description: 'This endpoint retrieves a post by its unique ID from the database. The post details are returned along with the author details (username, email, avatar, etc.).'
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Unique identifier for the post (UUID format)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The post details along with author information',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Post not found with the provided ID',
+  })
+  @UseGuards(JwtAppGuard)
   @Get(':id')
   async getPost(@Param('id', ParseUUIDPipe) id: string){
     const post = await this.postAppService.findPostById(id)
