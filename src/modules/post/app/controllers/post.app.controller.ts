@@ -56,30 +56,6 @@ export class PostAppController {
   }
 
   @ApiOperation({
-    summary: 'Get a single post by its ID',
-    description: 'This endpoint retrieves a post by its unique ID from the database. The post details are returned along with the author details (username, email, avatar, etc.).'
-  })
-  @ApiParam({
-    name: 'id',
-    type: String,
-    description: 'Unique identifier for the post (UUID format)',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The post details along with author information',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Post not found with the provided ID',
-  })
-  @UseGuards(JwtAppGuard)
-  @Get(':id')
-  async getPostById(@Param('id', ParseUUIDPipe) id: string){
-    const post = await this.postAppService.findPostById(id)
-    return { post }
-  }
-
-  @ApiOperation({
     summary: 'Get a post by its slug',
     description: 'This endpoint retrieves a post using its unique slug identifier. It returns the post details along with the author, subcategory, and category information.',
   })
@@ -97,7 +73,7 @@ export class PostAppController {
     description: 'Post not found with the provided slug',
   })
   @UseGuards(JwtAppGuard)
-  @Get('/slug/:slug')
+  @Get(':slug')
   async getPostBySlug(@Param('slug') slug: string){
     const post = await this.postAppService.findPostBySlug(slug)
     return { post }

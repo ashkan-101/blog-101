@@ -47,28 +47,6 @@ export class PostAppService {
     }
   }
 
-  public async findPostById(postId: string){
-    const post = await this.postRepository.findOne({
-      where: { id: postId },
-      relations: ['author', 'subcategory', 'subcategory.category'],
-      select: {
-        author: {
-          userName: true,
-          email: true,
-          avatar: true,
-          role: true,
-          isActive: true,
-          createdAt: true,
-          id: true
-        }
-      }
-    })
-
-    if(!post) throw new NotFoundException('not found any post with this Id')
-
-    return post
-  }
-
   public async findPostBySlug(slug: string){
     const post = await this.postRepository.findOne({
       where: { slug },
