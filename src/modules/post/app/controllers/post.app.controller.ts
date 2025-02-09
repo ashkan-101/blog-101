@@ -13,37 +13,42 @@ export class PostAppController {
   ){}
 
   @ApiOperation({
-    summary: 'Get all posts with pagination and sorting options',
-    description: 'This endpoint returns a paginated list of posts with the option to sort by popularity or creation date.',
-  })
-  @ApiQuery({
-    name: 'page',
-    type: Number,
-    description: 'The page number for pagination (default is 1)',
-    required: false,
-    example: 1,
-  })
-  @ApiQuery({
-    name: 'sortingBy',
-    description: 'Sorting criteria for posts. Options are "popular" (by views) or "newest" (by creation date)',
-    required: false,
-    default: 'popular',
+    summary: 'Get a list of posts',
+    description: 'Retrieve a paginated list of posts, optionally sorted by popularity or newest. Can also filter by subcategory.'
   })
   @ApiResponse({
     status: 200,
-    description: 'Returns a paginated list of posts along with the total number of pages.',
+    description: 'List of posts successfully retrieved.',
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid query parameters for pagination or sorting.',
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number for pagination (default is 1)',
+    example: 1
+  })
+  @ApiQuery({
+    name: 'sortingBy',
+    required: false,
+    enum: PostSorting,
+    description: 'Sorting criteria: either by "POPULAR" or "NEWEST" (default is POPULAR)',
+    example: PostSorting.POPULAR
+  })
+  @ApiQuery({
+    name: 'subcategoryId',
+    required: false,
+    type: String,
+    description: 'Filter posts by subcategory ID. If provided, should be a valid UUID.',
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
   })
   @UseGuards(JwtAppGuard)
   @Get()
   async getPosts(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('sortingBy', new DefaultValuePipe(PostSorting.POPULAR)) sortingBy: PostSorting
+    @Query('sortingBy', new DefaultValuePipe(PostSorting.POPULAR)) sortingBy: PostSorting,
+    @Query('subcategoryId') subcategoryId?: string
   ){
-    const {totalPages, posts }= await this.postAppService.getAllPosts(page, sortingBy)
+    const {totalPages, posts }= await this.postAppService.getAllPosts(page, sortingBy, subcategoryId)
     return { 
       totalPages,
       posts

@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { PostAppFactory } from "../post.app.factory";
 import { paginateTool } from "src/common/utils/paginate.tool";
 import { PostSorting } from "../../enums/Post.Sorting";
-
+import { validate as validateUUID} from 'uuid'
 
 @Injectable()
 export class PostAppService {
@@ -21,11 +21,15 @@ export class PostAppService {
 
   //--------------------------------public methods
 
-  public async getAllPosts(page: number, sorting: PostSorting){
+  public async getAllPosts(page: number, sorting: PostSorting, subcategoryId?: string){
     const pagination = paginateTool({page, take: 20})
   
     const queryBuilder = this.postRepository.createQueryBuilder('post');
-  
+
+    if(subcategoryId && validateUUID(subcategoryId)){
+      queryBuilder.where('subcategory.id = :subcategoryId', { subcategoryId })
+    }
+
     if(sorting === PostSorting.NEWEST) queryBuilder.orderBy('post.createdAt', 'DESC')
     if(sorting === PostSorting.POPULAR) queryBuilder.orderBy('post.views', 'DESC')
   
@@ -37,10 +41,10 @@ export class PostAppService {
       .take(pagination.take)
       .getManyAndCount()
   
-      return {
-        totalPages: Math.ceil(totalCount / pagination.take),
-        posts
-      }
+    return {
+      totalPages: Math.ceil(totalCount / pagination.take),
+       posts
+    }
   }
 
   public async findPostById(postId: string){
