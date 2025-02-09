@@ -130,4 +130,12 @@ export class PostAdminController{
 
     return { deleteResult: true }
   }
+
+  @UseGuards(JwtAdminGuard)
+  @Get('/author/:id')
+  async getAuthorPosts(@Param('id', ParseUUIDPipe) authorId: string){
+    const posts = await this.postAdminService.findPostsByAuthorId(authorId)
+
+    return { posts }
+  }
 }

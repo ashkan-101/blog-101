@@ -83,4 +83,16 @@ export class PostAdminService{
     })
     if(deleteResult.affected === 0) throw new NotFoundException('not found any post with this Id')
   }
+
+  public async findPostsByAuthorId(authorId: string){
+    const posts = await this.postRepository.find({
+      where: { author: { id: authorId } },
+      relations: ['author', 'subcategory', 'subcategory.category'],
+      order: { createdAt: 'DESC' }
+    })
+
+    if(posts.length < 1) throw new NotFoundException('not found any posts with this autor Id')
+    
+    return posts
+  }
 }
