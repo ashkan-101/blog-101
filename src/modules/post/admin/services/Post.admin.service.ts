@@ -9,6 +9,7 @@ import { PostSorting } from "../../enums/Post.Sorting";
 import { paginateTool } from "src/common/utils/paginate.tool";
 import { PostImageType } from "../../types/post.images.type";
 import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
+import { UpdatePostDto } from "../dtos/update-post.dto";
 
 @Injectable()
 export class PostAdminService{
@@ -108,5 +109,10 @@ export class PostAdminService{
     if(posts.length < 1) throw new NotFoundException('not found any posts with this autor Id')
     
     return posts
+  }
+
+  public async updatePostById(postId: string, authorId: string, params: UpdatePostDto){
+    const updateResult = await this.postRepository.update({ id: postId, author: { id: authorId } }, params)
+    if(updateResult.affected === 0) throw new NotFoundException('not Found any post with this Id')
   }
 }

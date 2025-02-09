@@ -1,50 +1,35 @@
 import { IsString, IsNotEmpty, IsArray, IsInt, IsObject, IsOptional, ValidateNested, IsDefined, ArrayNotEmpty, Matches, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { ImageDetailsDto } from './image-details.dto';
 
-class ImageDetailsDto {
-  @IsInt()
-  @IsNotEmpty()
-  @ApiProperty({ description: 'Position of the image in the gallery or as a thumbnail', type: Number })
-  position: number;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ description: 'The path where the image is stored', type: String })
-  imagePath: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ description: 'The name of the image file', type: String })
-  imageName: string;
-}
 
 export class CreatePostDto {
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ description: 'Title of the post', type: String })
+  @ApiProperty({ description: 'Title of the post', type: String, required: true })
   title: string;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ description: 'Meta title of the post for SEO', type: String })
+  @ApiProperty({ description: 'Meta title of the post for SEO', type: String, required: true  })
   metaTitle: string;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ description: 'Description of the post', type: String })
+  @ApiProperty({ description: 'Description of the post', type: String, required: true  })
   description: string;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ description: 'Meta description for SEO', type: String })
+  @ApiProperty({ description: 'Meta description for SEO', type: String, required: true  })
   metaDescription: string;
 
   @IsObject()
   @IsDefined()
   @ValidateNested()
   @Type(() => ImageDetailsDto)
-  @ApiProperty({ description: 'Thumbnail image details', type: ImageDetailsDto })
+  @ApiProperty({ description: 'Thumbnail image details', type: ImageDetailsDto, required: true  })
   thumbnail: ImageDetailsDto;
 
   @IsString()

@@ -1,10 +1,11 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, Req, UseGuards } from "@nestjs/common";
 import { PostAdminService } from "../services/post.admin.service";
 import { CreatePostDto } from "../dtos/create-post.dto";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { PostEntity } from "../../entities/post.entity";
 import { PostSorting } from "../../enums/Post.Sorting";
+import { UpdatePostDto } from "../dtos/update-post.dto";
 
 
 @Controller('/api/v1/admin/posts')
@@ -156,5 +157,13 @@ export class PostAdminController{
     const posts = await this.postAdminService.findPostsByAuthorId(authorId)
 
     return { posts }
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @Put(':id')
+  async updatePost(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdatePostDto, @Req() req){
+    const authorId = req.user.id
+    await this.postAdminService.updatePostById(id, authorId, body)
+    return { updateResult: true }
   }
 }
