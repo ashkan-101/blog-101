@@ -2,6 +2,7 @@ import { BaseEntity } from "src/common/abstracts/base.entity";
 import { AdminEntity } from "src/modules/admin/entities/admin.entity";
 import { SubcategoryEntity } from "src/modules/category/entities/subcategory.entity";
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany, ManyToMany } from "typeorm";
+import { PostImageType } from "../types/post.images.type";
 
 @Entity('post')
 export class PostEntity extends BaseEntity{
@@ -23,13 +24,13 @@ export class PostEntity extends BaseEntity{
   metaDescription: string;
 
   @Column({type: 'jsonb'})
-  thumbnail: {position: number, imagePath: string, imageName: string};
+  thumbnail: PostImageType;
 
   @Column({type: 'varchar', nullable: true})
   thumbnailAltText: string;
 
   @Column({type: 'jsonb'})
-  gallery: {position: number, imagePath: string, imageName: string}[];
+  gallery: PostImageType[];
 
   @Column({type: 'varchar', nullable: false})
   slug: string;

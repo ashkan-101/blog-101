@@ -7,13 +7,16 @@ import { AdminEntity } from "src/modules/admin/entities/admin.entity";
 import { PostAdminFactory } from "../post.admin.factory";
 import { PostSorting } from "../../enums/Post.Sorting";
 import { paginateTool } from "src/common/utils/paginate.tool";
+import { PostImageType } from "../../types/post.images.type";
+import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
 
 @Injectable()
 export class PostAdminService{
   constructor(
     @InjectRepository(PostEntity)
     private readonly postRepository: Repository<PostEntity>,
-    private readonly postAdminFactory: PostAdminFactory
+    private readonly postAdminFactory: PostAdminFactory,
+    private readonly diskStorageService: LocalDiskStorageService
   ){}
 
   //--------------------------------private methods
@@ -27,6 +30,15 @@ export class PostAdminService{
     return newSlug
   }
 
+  private async deletePostImages(thumbnail?: PostImageType, gallery?: PostImageType[]){
+    if(thumbnail){
+      await this.diskStorageService.deleteFile(thumbnail.imagePath, thumbnail.imageName)
+    }else if(gallery){
+      for (const image of gallery){
+        await this.diskStorageService.deleteFile(image.imagePath, image.imageName)
+      }
+    }
+  }
   //-------------------------------public methods
 
   public async createNewPost(params: CreatePostDto, author: AdminEntity){
@@ -77,13 +89,15 @@ export class PostAdminService{
   }
 
   public async deletePostById(postId: string, authorId: string){
-    const deleteResult = await this.postRepository.delete({
-      id: postId,
-      author: { id: authorId }
-    })
-    if(deleteResult.affected === 0) throw new NotFoundException('not found any post with this Id')
-  }
+    const post = await this.postRepository.findOne({ where: {id: postId,author: { id: authorId }}})
 
+    if(!post) throw new NotFoundException('not found any post with this Id')
+
+    await this.deletePostImages(post.thumbnail, post.gallery)
+
+    await this.postRepository.remove(post)
+  }
+  
   public async findPostsByAuthorId(authorId: string){
     const posts = await this.postRepository.find({
       where: { author: { id: authorId } },

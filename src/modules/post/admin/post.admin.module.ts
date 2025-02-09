@@ -5,11 +5,12 @@ import { PostAdminController } from "./controllers/post.admin.controller";
 import { PostAdminService } from "./services/post.admin.service";
 import { CategoryAdminModule } from "src/modules/category/admin/category.admin.module";
 import { PostAdminFactory } from "./post.admin.factory";
+import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
 
 
 @Module({
   controllers: [PostAdminController],
-  providers: [PostAdminService, PostAdminFactory],
+  providers: [PostAdminService, PostAdminFactory, LocalDiskStorageService],
   imports: [
     CategoryAdminModule,
     TypeOrmModule.forFeature([PostEntity])
