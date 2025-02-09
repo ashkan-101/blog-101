@@ -75,4 +75,12 @@ export class PostAdminService{
         posts
       }
   }
+
+  public async deletePostById(postId: string, authorId: string){
+    const deleteResult = await this.postRepository.delete({
+      id: postId,
+      author: { id: authorId }
+    })
+    if(deleteResult.affected === 0) throw new NotFoundException('not found any post with this Id')
+  }
 }

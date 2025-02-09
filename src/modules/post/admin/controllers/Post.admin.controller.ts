@@ -1,4 +1,4 @@
-import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { PostAdminService } from "../services/post.admin.service";
 import { CreatePostDto } from "../dtos/create-post.dto";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
@@ -95,5 +95,14 @@ export class PostAdminController{
   ){
     const posts = await this.postAdminService.getAllPosts(page, sortingBy)
     return { posts }
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @Delete(':id')
+  async deletePost(@Param('id', ParseUUIDPipe) id: string, @Req() req){
+    const adminId= req.user.id
+    await this.postAdminService.deletePostById(id, adminId)
+
+    return { deleteResult: true }
   }
 }
