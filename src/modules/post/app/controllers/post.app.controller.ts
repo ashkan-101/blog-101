@@ -2,6 +2,7 @@ import { Controller, DefaultValuePipe, Get, ParseIntPipe, Query, UseGuards } fro
 import { PostAppService } from "../services/post.app.service";
 import { PostSorting } from "../../enums/Post.Sorting";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
+import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
 
 
 @Controller()
@@ -10,6 +11,32 @@ export class PostAppController {
     private readonly postAppService: PostAppService
   ){}
 
+
+  @ApiOperation({
+    summary: 'Get all posts with pagination and sorting options',
+    description: 'This endpoint returns a paginated list of posts with the option to sort by popularity or creation date.',
+  })
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    description: 'The page number for pagination (default is 1)',
+    required: false,
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'sortingBy',
+    description: 'Sorting criteria for posts. Options are "popular" (by views) or "newest" (by creation date)',
+    required: false,
+    default: 'popular',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns a paginated list of posts along with the total number of pages.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid query parameters for pagination or sorting.',
+  })
   @UseGuards(JwtAppGuard)
   @Get()
   async getPosts(
