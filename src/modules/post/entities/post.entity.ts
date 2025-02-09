@@ -3,6 +3,7 @@ import { AdminEntity } from "src/modules/admin/entities/admin.entity";
 import { SubcategoryEntity } from "src/modules/category/entities/subcategory.entity";
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany, ManyToMany } from "typeorm";
 import { PostImageType } from "../types/post.images.type";
+import { LikePostEntity } from "./likePost.entity";
 
 @Entity('post')
 export class PostEntity extends BaseEntity{
@@ -37,20 +38,20 @@ export class PostEntity extends BaseEntity{
 
   @ManyToOne(()=> SubcategoryEntity, subcategory => subcategory.posts, {onDelete: 'CASCADE'})
   @JoinColumn({name: 'subcategory'})
-  subcategory!: SubcategoryEntity;
+  subcategory: SubcategoryEntity;
 
   // @OneToMany(()=> CommentPG, comment => comment.post)
-  // comments!: ICommentPG[];
+  // comments: ICommentPG[];
 
   // @ManyToMany(()=> UserPG, user => user.favoritePosts)
-  // favoriteBy!: UserPG[];
+  // favoriteBy: UserPG[];
 
   @Column({type: 'int', default: 0})
-  views!: number;
+  views: number;
 
   @Column({type: 'jsonb', default: []})
-  tags!: string[];
+  tags: string[];
 
-  // @Column({type: 'jsonb', default: []})
-  // likes!: string[];
+  @OneToMany(() => LikePostEntity, like => like.post)
+  likes: LikePostEntity;
 }

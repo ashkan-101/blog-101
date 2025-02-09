@@ -1,5 +1,6 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "src/common/abstracts/base.entity";
+import { LikePostEntity } from "src/modules/post/entities/likePost.entity";
 
 @Entity('user')
 export class UserEntity extends BaseEntity{
@@ -12,6 +13,8 @@ export class UserEntity extends BaseEntity{
   @Column({type: 'text', nullable: true})
   avatar!: string;
 
+  @OneToMany(() => LikePostEntity, like => like.user)
+  postLikes: LikePostEntity
   // @ManyToMany(()=> SubcategoryPG, subcategory => subcategory.folowingUsers)
   // @JoinTable()
   // favoriteSubcategories!: ISubcategoryPG[]
