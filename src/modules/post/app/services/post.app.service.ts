@@ -68,4 +68,15 @@ export class PostAppService {
 
     return post
   }
+
+  public async updatePostViewsById(postId: string){
+    const updateResult = await this.postRepository
+      .createQueryBuilder()
+      .update('post')
+      .set({ views: ()=> "views + 1"})
+      .where("id = :postId", { postId })
+      .execute()
+    
+    if(updateResult.affected === 0) throw new NotFoundException('not found any post with this Id')
+  }
 }

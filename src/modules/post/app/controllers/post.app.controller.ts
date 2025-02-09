@@ -1,4 +1,4 @@
-import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Query, UseGuards } from "@nestjs/common";
+import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Query, UseGuards } from "@nestjs/common";
 import { PostAppService } from "../services/post.app.service";
 import { PostSorting } from "../../enums/Post.Sorting";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
@@ -77,5 +77,12 @@ export class PostAppController {
   async getPostBySlug(@Param('slug') slug: string){
     const post = await this.postAppService.findPostBySlug(slug)
     return { post }
+  }
+
+  @Patch(':id')
+  async addViewCount(@Param('id', ParseUUIDPipe) id: string){
+    await this.postAppService.updatePostViewsById(id)
+
+    return { result: true }
   }
 }
