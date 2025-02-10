@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PostEntity } from "../../entities/post.entity";
 import { Repository } from "typeorm";
-import { PostAppFactory } from "../post.app.factory";
 import { paginateTool } from "src/common/utils/paginate.tool";
 import { PostSorting } from "../../enums/Post.Sorting";
 import { validate as validateUUID} from 'uuid'
@@ -12,12 +11,7 @@ export class PostAppService {
   constructor(
     @InjectRepository(PostEntity)
     private readonly postRepository: Repository<PostEntity>,
-    private readonly postAppFactory: PostAppFactory
   ){}
-
-  //--------------------------------private methods
-
-
 
   //--------------------------------public methods
 
@@ -48,25 +42,32 @@ export class PostAppService {
   }
 
   public async findPostBySlug(slug: string){
-    const post = await this.postRepository.findOne({
-      where: { slug },
-      relations: ['author', 'subcategory', 'subcategory.category'],
-      select: {
-        author: {
-          userName: true,
-          email: true,
-          avatar: true,
-          role: true,
-          isActive: true,
-          createdAt: true,
-          id: true
-        }
-      }
-    })
+    const post = await this.postRepository.createQueryBuilder('post')
+    .where('post.slug = :slug', { slug })
+    .leftJoinAndSelect('post.author', 'author')
+    .leftJoinAndSelect('post.subcategory', 'subcategory')
+    .leftJoinAndSelect('subcategory.category', 'category')
+    .leftJoinAndSelect('post.likes', 'likes')
+    .leftJoinAndSelect('likes.user', 'user')
+    .loadRelationCountAndMap('post.likesCount', 'post.likes')
+    .select([
+      'post',
+      'author.userName',
+      'author.email',
+      'author.avatar',
+      'author.role',
+      'author.isActive',
+      'author.createdAt',
+      'author.id',
+      'likes.id',
+      'likes.createdAt',
+      'user.id'
+    ])
+    .getOne();
 
     if(!post) throw new NotFoundException('not found any post with this slug')
-
-    return post
+    
+    return post;
   }
 
   public async updatePostViewsById(postId: string){
@@ -78,5 +79,10 @@ export class PostAppService {
       .execute()
     
     if(updateResult.affected === 0) throw new NotFoundException('not found any post with this Id')
+  }
+
+  //------------------------------export methods
+  public async findPostById(postId: string){
+    return await this.postRepository.findOne({ where: { id: postId }})
   }
 }
