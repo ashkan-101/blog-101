@@ -1,6 +1,7 @@
 import { Controller, Param, ParseUUIDPipe, Post, Req, UseGuards } from "@nestjs/common";
 import { PostReportAppService } from "../services/post-report.app.service";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
+import { ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 
 
 @Controller('/api/v1/post/reports')
@@ -9,6 +10,29 @@ export class PostReportAppController {
     private readonly postReportAppService: PostReportAppService
   ){}
 
+  @ApiOperation({ summary: 'Report a post' })
+  @ApiParam({
+    name: 'postId',
+    description: 'The UUID of the post to be reported',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'The report was successfully created',
+    schema: {
+      example: {
+        newReport: {
+          id: 'reportId',
+          post: { id: 'postId' },
+          user: { id: 'userId' },
+          createdAt: '2025-02-10T00:00:00Z',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Post not found with the provided ID',
+  })
   @UseGuards(JwtAppGuard)
   @Post(':postId')
   async saveReport(@Param('postId', ParseUUIDPipe) postId: string, @Req() req){
