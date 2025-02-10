@@ -1,4 +1,4 @@
-import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Query, UseGuards } from "@nestjs/common";
+import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Query, Req, UseGuards } from "@nestjs/common";
 import { PostAppService } from "../services/post.app.service";
 import { PostSorting } from "../../enums/Post.Sorting";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
@@ -74,9 +74,12 @@ export class PostAppController {
   })
   @UseGuards(JwtAppGuard)
   @Get(':slug')
-  async getPostBySlug(@Param('slug') slug: string){
+  async getPostBySlug(@Param('slug') slug: string, @Req() req){
     const post = await this.postAppService.findPostBySlug(slug)
-    return { post }
+    return { 
+      post,
+      currentUser: req.user.id
+     }
   }
 
   @ApiOperation({

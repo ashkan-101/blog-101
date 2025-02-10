@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "src/common/abstracts/base.entity";
 import { LikePostEntity } from "src/modules/post/entities/likePost.entity";
+import { PostReport } from "src/modules/post/entities/postReport.entity";
 
 @Entity('user')
 export class UserEntity extends BaseEntity{
@@ -28,4 +29,7 @@ export class UserEntity extends BaseEntity{
   // @ManyToMany(()=> PostPG, post => post.favoriteBy)
   // @JoinTable()
   // favoritePosts!: PostPG[];
+
+  @OneToMany(() => PostReport, (report) => report.user)
+  postReports: PostReport[];
 }
