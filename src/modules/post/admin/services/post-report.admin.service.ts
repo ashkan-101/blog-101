@@ -36,6 +36,7 @@ export class PostReportAdminService {
     }
   }
   
+
   public async deleteReportById(reportId: string){
     const deleteResult = await this.reportRepository.delete({
       id: reportId
