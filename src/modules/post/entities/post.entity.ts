@@ -5,7 +5,7 @@ import { Entity, Column, ManyToOne, JoinColumn, OneToMany, ManyToMany } from "ty
 import { PostImageType } from "../types/post.images.type";
 import { LikePostEntity } from "./likePost.entity";
 import { PostReportEntity } from "./postReport.entity";
-import CommentEntity from "./comment.entity";
+import { CommentEntity } from "./comment.entity";
 
 @Entity('post')
 export class PostEntity extends BaseEntity{

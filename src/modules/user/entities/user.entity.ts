@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "src/common/abstracts/base.entity";
 import { LikePostEntity } from "src/modules/post/entities/likePost.entity";
 import { PostReportEntity } from "src/modules/post/entities/postReport.entity";
-import CommentEntity from "src/modules/post/entities/comment.entity";
+import { CommentEntity } from "src/modules/post/entities/comment.entity";
 
 @Entity('user')
 export class UserEntity extends BaseEntity{

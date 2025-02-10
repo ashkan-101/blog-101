@@ -4,7 +4,7 @@ import { PostEntity } from "./post.entity";
 import { BaseEntity } from "src/common/abstracts/base.entity";
 
 @Entity('comment')
-export default class CommentEntity extends BaseEntity{
+export class CommentEntity extends BaseEntity{
 
   @Column({type: 'varchar', nullable: false})
   title: string;

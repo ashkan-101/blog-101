@@ -10,12 +10,21 @@ import { LikePostEntity } from "../entities/likePost.entity";
 import { PostReportEntity } from "../entities/postReport.entity";
 import { PostReportAppController } from "./controllers/post-report.app.controller";
 import { PostReportAppService } from "./services/post-report.app.service";
-import CommentEntity from "../entities/comment.entity";
+import { CommentEntity } from "../entities/comment.entity";
+import { CommentAppController } from "./controllers/comment.app.controller";
+import { CommentAppService } from "./services/comment.app.service";
 
 
 @Module({
-  controllers: [PostAppController, LikePostAppController, PostReportAppController],
-  providers: [PostAppService, PostAppFactory, LikePostAppService, PostReportAppService],
+  controllers: [
+    PostAppController, LikePostAppController, 
+    PostReportAppController, CommentAppController
+  ],
+  providers: [
+    PostAppService, PostAppFactory, 
+    LikePostAppService, PostReportAppService, 
+    CommentAppService
+  ],
   imports: [TypeOrmModule.forFeature([PostEntity, LikePostEntity, PostReportEntity, CommentEntity])],
 })
 export class PostAppModule{}
