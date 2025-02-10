@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { UserAppService } from '../../user/app/user.app.service';
+import { UserAppService } from '../../user/app/services/user.app.service';
 import { IFindUserByMobile } from '../../user/interfaces/IFindUserByMobile'
 import { ICreateUserByMobile } from '../../user/interfaces/ICreateUserByMobile'
 import { IFindUserById } from "../../user/interfaces/IFindUserById";
