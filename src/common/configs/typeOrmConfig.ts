@@ -8,6 +8,7 @@ import { AdminEntity } from "src/modules/admin/entities/admin.entity";
 import { PostEntity } from "src/modules/post/entities/post.entity";
 import { LikePostEntity } from "src/modules/post/entities/likePost.entity";
 import { PostReportEntity } from "src/modules/post/entities/postReport.entity";
+import CommentEntity from "src/modules/post/entities/comment.entity";
 config()
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
@@ -22,6 +23,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     UserEntity, OtpEntity, 
     AdminEntity, PostEntity, 
     LikePostEntity, PostReportEntity,
-    CategoryEntity, SubcategoryEntity, 
+    CategoryEntity, SubcategoryEntity,
+    CommentEntity
   ]
 }
