@@ -5,6 +5,7 @@ import { Entity, Column, ManyToOne, JoinColumn, OneToMany, ManyToMany } from "ty
 import { PostImageType } from "../types/post.images.type";
 import { LikePostEntity } from "./likePost.entity";
 import { PostReportEntity } from "./postReport.entity";
+import CommentEntity from "./comment.entity";
 
 @Entity('post')
 export class PostEntity extends BaseEntity{
@@ -40,10 +41,7 @@ export class PostEntity extends BaseEntity{
   @ManyToOne(()=> SubcategoryEntity, subcategory => subcategory.posts, {onDelete: 'CASCADE'})
   @JoinColumn({name: 'subcategory'})
   subcategory: SubcategoryEntity;
-
-  // @OneToMany(()=> CommentPG, comment => comment.post)
-  // comments: ICommentPG[];
-
+  
   // @ManyToMany(()=> UserPG, user => user.favoritePosts)
   // favoriteBy: UserPG[];
 
@@ -58,4 +56,7 @@ export class PostEntity extends BaseEntity{
 
   @OneToMany(() => PostReportEntity, (report) => report.post)
   reports: PostReportEntity[];
+
+  @OneToMany(() => CommentEntity, comment => comment.post)
+  comments: CommentEntity[]
 }
