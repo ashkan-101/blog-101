@@ -3,7 +3,7 @@ import { PostReportAppService } from "../services/post-report.app.service";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
 
 
-@Controller('/api/v1/posts/report')
+@Controller('/api/v1/post/reports')
 export class PostReportAppController {
   constructor(
     private readonly postReportAppService: PostReportAppService

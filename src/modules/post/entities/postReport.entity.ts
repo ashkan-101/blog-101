@@ -4,13 +4,13 @@ import { Entity, JoinColumn, ManyToOne } from "typeorm";
 import { PostEntity } from "./post.entity";
 
 
-@Entity()
+@Entity('post-report')
 export class PostReportEntity extends BaseEntity {
-  @ManyToOne(() => UserEntity, (user) => user.postReports)
+  @ManyToOne(() => UserEntity, (user) => user.postReports, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user' })
   user: UserEntity;
 
-  @ManyToOne(() => PostEntity, (post) => post.reports)
+  @ManyToOne(() => PostEntity, (post) => post.reports, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'post' })
   post: PostEntity;
 }

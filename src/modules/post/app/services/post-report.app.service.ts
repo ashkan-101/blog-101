@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PostReportEntity } from "../../entities/postReport.entity";
 import { Repository } from "typeorm";
-import { IFindPostById } from "../../interfaces/IFindPostById";
 import { PostAppFactory } from "../post.app.factory";
 import { UserEntity } from "src/modules/user/entities/user.entity";
 

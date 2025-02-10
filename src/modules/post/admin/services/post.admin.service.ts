@@ -1,15 +1,15 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { PostEntity } from "../entities/post.entity";
+import { PostEntity } from "../../entities/post.entity";
 import { Repository } from "typeorm";
-import { CreatePostDto } from "./dtos/create-post.dto";
+import { CreatePostDto } from "../dtos/create-post.dto";
 import { AdminEntity } from "src/modules/admin/entities/admin.entity";
-import { PostAdminFactory } from "./post.admin.factory";
-import { PostSorting } from "../enums/Post.Sorting";
+import { PostAdminFactory } from "../post.admin.factory";
+import { PostSorting } from "../../enums/Post.Sorting";
 import { paginateTool } from "src/common/utils/paginate.tool";
-import { PostImageType } from "../types/post.images.type";
+import { PostImageType } from "../../types/post.images.type";
 import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
-import { UpdatePostDto } from "./dtos/update-post.dto";
+import { UpdatePostDto } from "../dtos/update-post.dto";
 
 @Injectable()
 export class PostAdminService{

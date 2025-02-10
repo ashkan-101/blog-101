@@ -1,11 +1,11 @@
 import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Put, Query, Req, UseGuards } from "@nestjs/common";
-import { PostAdminService } from "./post.admin.service";
-import { CreatePostDto } from "./dtos/create-post.dto";
+import { PostAdminService } from "../services/post.admin.service";
+import { CreatePostDto } from "../dtos/create-post.dto";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
-import { PostEntity } from "../entities/post.entity";
-import { PostSorting } from "../enums/Post.Sorting";
-import { UpdatePostDto } from "./dtos/update-post.dto";
+import { PostEntity } from "../../entities/post.entity";
+import { PostSorting } from "../../enums/Post.Sorting";
+import { UpdatePostDto } from "../dtos/update-post.dto";
 
 
 @Controller('/api/v1/admin/posts')
