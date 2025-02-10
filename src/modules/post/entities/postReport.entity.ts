@@ -5,7 +5,7 @@ import { PostEntity } from "./post.entity";
 
 
 @Entity()
-export class PostReport extends BaseEntity {
+export class PostReportEntity extends BaseEntity {
   @ManyToOne(() => UserEntity, (user) => user.postReports)
   @JoinColumn({ name: 'user' })
   user: UserEntity;

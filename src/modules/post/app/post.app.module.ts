@@ -7,11 +7,14 @@ import { PostAppFactory } from "./post.app.factory";
 import { LikePostAppService } from "./services/like-post.app.service";
 import { LikePostAppController } from "./controllers/like-post.app.controller";
 import { LikePostEntity } from "../entities/likePost.entity";
+import { PostReportEntity } from "../entities/postReport.entity";
+import { PostReportAppController } from "./controllers/post-report.app.controller";
+import { PostReportAppService } from "./services/post-report.app.service";
 
 
 @Module({
-  controllers: [PostAppController, LikePostAppController],
-  providers: [PostAppService, PostAppFactory, LikePostAppService],
-  imports: [TypeOrmModule.forFeature([PostEntity, LikePostEntity])],
+  controllers: [PostAppController, LikePostAppController, PostReportAppController],
+  providers: [PostAppService, PostAppFactory, LikePostAppService, PostReportAppService],
+  imports: [TypeOrmModule.forFeature([PostEntity, LikePostEntity, PostReportEntity])],
 })
 export class PostAppModule{}

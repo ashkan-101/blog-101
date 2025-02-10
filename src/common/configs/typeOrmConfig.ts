@@ -7,6 +7,7 @@ import { SubcategoryEntity } from "src/modules/category/entities/subcategory.ent
 import { AdminEntity } from "src/modules/admin/entities/admin.entity";
 import { PostEntity } from "src/modules/post/entities/post.entity";
 import { LikePostEntity } from "src/modules/post/entities/likePost.entity";
+import { PostReportEntity } from "src/modules/post/entities/postReport.entity";
 config()
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
@@ -17,5 +18,10 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: process.env.PG_PASSWORD as string,
   database: 'blog-101',
   synchronize: true,
-  entities: [UserEntity, OtpEntity, CategoryEntity, SubcategoryEntity, AdminEntity, PostEntity, LikePostEntity]
+  entities: [
+    UserEntity, OtpEntity, 
+    AdminEntity, PostEntity, 
+    LikePostEntity, PostReportEntity,
+    CategoryEntity, SubcategoryEntity, 
+  ]
 }
