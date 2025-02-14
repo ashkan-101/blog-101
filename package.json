@@ -20,6 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@keyv/redis": "^4.2.0",
+    "@nestjs/cache-manager": "^3.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
@@ -28,9 +30,12 @@
     "@nestjs/swagger": "^11.0.3",
     "@nestjs/typeorm": "^11.0.0",
     "bcrypt": "^5.1.1",
+    "cache-manager": "^6.4.0",
+    "cacheable": "^1.8.8",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.7",
     "fs-extra": "^11.3.0",
+    "keyv": "^5.2.3",
     "mime-types": "^2.1.35",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",

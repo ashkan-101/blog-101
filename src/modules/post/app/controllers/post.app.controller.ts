@@ -1,10 +1,9 @@
-import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Query, Req, UseGuards } from "@nestjs/common";
+import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Query, Req, UseGuards, UseInterceptors } from "@nestjs/common";
 import { PostAppService } from "../services/post.app.service";
 import { PostSorting } from "../../enums/Post.Sorting";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
-import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
-
+import { CacheInterceptor } from "src/common/interceptors/cache.interceptor";
 
 @Controller('/api/v1/posts')
 export class PostAppController {
@@ -42,6 +41,7 @@ export class PostAppController {
     example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
   })
   @UseGuards(JwtAppGuard)
+  @UseInterceptors(CacheInterceptor)
   @Get()
   async getPosts(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
