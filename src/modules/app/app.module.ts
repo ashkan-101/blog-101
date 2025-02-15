@@ -6,10 +6,11 @@ import { typeOrmConfig } from 'src/common/configs/typeOrmConfig';
 import { CategoryModule } from '../category/category.module';
 import { AdminModule } from '../admin/admin.module';
 import { PostModule } from '../post/post.module';
+import { SMSModule } from 'src/common/services/notifications/sms/sms.module';
 
 @Module({
   imports: [
-    UserModule, AuthModule, CategoryModule, AdminModule, PostModule,
+    UserModule, AuthModule, CategoryModule, AdminModule, PostModule, SMSModule,
     TypeOrmModule.forRoot(typeOrmConfig)
   ],
 })
