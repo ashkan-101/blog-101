@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { KaveNegar } from "./providers/kavenegar";
+import { KaveNegar } from "./providers/KaveNegar";
 import { SMSService } from "./sms.service";
 
 @Module({

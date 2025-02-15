@@ -5,6 +5,8 @@ import { CacheInterceptor } from '../interceptors/cache.interceptor';
 import { Keyv } from 'keyv';
 import { CacheableMemory } from 'cacheable';
 import { createKeyv } from '@keyv/redis';
+import { config } from 'dotenv';
+config()
 
 @Module({
   providers: [RedisCacheService, CacheInterceptor], 
@@ -16,7 +18,7 @@ import { createKeyv } from '@keyv/redis';
             new Keyv({
               store: new CacheableMemory({ ttl: 60000, lruSize: 5000})
             }),
-            createKeyv('redis://localhost:6379')
+            createKeyv(`redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`)
           ]
         }
       },
