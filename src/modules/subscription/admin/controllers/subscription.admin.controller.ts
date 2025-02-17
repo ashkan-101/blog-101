@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { SubscriptionAdminService } from "../services/subscription.admin.service";
 import { CreateSubscriptionDto } from "../dtos/create-subscription.dto";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
@@ -43,4 +43,10 @@ export class SubscriptionAdminController {
     return { newSubscription }
   }
   
-}
+  @UseGuards(JwtAdminGuard)
+  @Get()
+  async getSubscriptions(){
+    const { totalPlans, subscriptions } = await this.subscriptionAdminService.findAllSubscriptions()
+    return { totalPlans, subscriptions }
+  }
+} 

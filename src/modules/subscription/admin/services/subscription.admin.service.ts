@@ -17,4 +17,12 @@ export class SubscriptionAdminService{
 
     return await createSubscription.save()
   }
+
+  public async findAllSubscriptions(){
+    const [subscriptions, totalPlans] = await this.subscriptionPlanRepository.findAndCount({
+      order: { durationDays: 'ASC'}
+    })
+
+    return { totalPlans, subscriptions }
+  }
 }
