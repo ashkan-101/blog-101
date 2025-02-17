@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, UseGuards } from "@nestjs/common";
 import { SubscriptionAdminService } from "../services/subscription.admin.service";
 import { CreateSubscriptionDto } from "../dtos/create-subscription.dto";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
@@ -75,5 +75,13 @@ export class SubscriptionAdminController {
   async getSubscriptions(){
     const { totalPlans, subscriptions } = await this.subscriptionAdminService.findAllSubscriptions()
     return { totalPlans, subscriptions }
+  }
+
+  @UseGuards(JwtAdminGuard)
+  @Delete(':id')
+  async delete(@Param('id', ParseUUIDPipe) id: string){
+    await this.subscriptionAdminService.deleteSubscriptionById(id)
+
+    return { deleteResult: true }
   }
 } 

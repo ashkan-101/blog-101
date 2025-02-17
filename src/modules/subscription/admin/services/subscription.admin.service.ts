@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { SubscriptionPlanEntity } from "../../entities/subscription-plan.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -24,5 +24,11 @@ export class SubscriptionAdminService{
     })
 
     return { totalPlans, subscriptions }
+  }
+
+  public async deleteSubscriptionById(id: string){
+    const deleteResult = await this.subscriptionPlanRepository.delete({id})
+
+    if(deleteResult.affected === 0) throw new NotFoundException('not found any subscription By this ID')
   }
 }
