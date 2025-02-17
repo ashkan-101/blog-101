@@ -10,6 +10,8 @@ import { LikePostEntity } from "src/modules/post/entities/likePost.entity";
 import { PostReportEntity } from "src/modules/post/entities/postReport.entity";
 import { CommentEntity } from "src/modules/post/entities/comment.entity";
 import { NotificationEntity } from "src/modules/user/entities/notification.entity";
+import { SubscriptionPlanEntity } from "src/modules/subscription/entities/subscription-plan.entity";
+import { UserSubscriptionEntity } from "src/modules/subscription/entities/user-subscription.entity";
 config()
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
@@ -25,6 +27,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     AdminEntity, PostEntity, 
     LikePostEntity, PostReportEntity,
     CategoryEntity, SubcategoryEntity,
-    CommentEntity, NotificationEntity
+    CommentEntity, NotificationEntity,
+    SubscriptionPlanEntity, UserSubscriptionEntity,
   ]
 }

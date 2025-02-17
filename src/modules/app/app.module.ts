@@ -10,11 +10,16 @@ import { SMSModule } from 'src/common/services/notifications/sms/sms.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { throttlerConfig } from 'src/common/configs/throttlerConfig';
 import { APP_GUARD } from '@nestjs/core';
+import { PaymentProviderModule } from 'src/common/services/payment/payment-provider.module';
+import { PaymentModule } from '../payment/payment.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
 
 @Module({
   imports: [
     UserModule, AuthModule, CategoryModule,
-     AdminModule, PostModule, SMSModule,
+    AdminModule, PostModule, SMSModule,
+    PaymentProviderModule, PaymentModule,
+    SubscriptionModule,
     TypeOrmModule.forRoot(typeOrmConfig),
     ThrottlerModule.forRoot(throttlerConfig)
   ],
