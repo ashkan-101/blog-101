@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, UseGuards } 
 import { SubscriptionAdminService } from "../services/subscription.admin.service";
 import { CreateSubscriptionDto } from "../dtos/create-subscription.dto";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
-import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 
 @Controller('/api/v1/admin/subscription')
 export class SubscriptionAdminController {
@@ -77,6 +77,28 @@ export class SubscriptionAdminController {
     return { totalPlans, subscriptions }
   }
 
+  @ApiOperation({
+    summary: 'Delete a subscription plan by ID -- ADMIN',
+    description: 'This endpoint is used to delete a subscription plan by its unique ID.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'The unique identifier of the subscription plan to be deleted.(UUID)',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The subscription plan was successfully deleted.',
+    schema: {
+      example: {
+        deleteResult: true,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'The subscription plan with the provided ID was not found.',
+  })
   @UseGuards(JwtAdminGuard)
   @Delete(':id')
   async delete(@Param('id', ParseUUIDPipe) id: string){
