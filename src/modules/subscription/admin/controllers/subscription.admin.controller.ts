@@ -43,6 +43,33 @@ export class SubscriptionAdminController {
     return { newSubscription }
   }
   
+  @ApiOperation({
+    summary: 'Retrieve all subscription plans -- ADMIN',
+    description: 'This endpoint is used to retrieve all subscription plans along with the total count.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched all subscription plans.',
+    schema: {
+      example: {
+        totalPlans: 5,
+        subscriptions: [
+          {
+            id: 1,
+            name: 'Basic Plan',
+            price: 10,
+            durationDays: 30,
+          },
+          {
+            id: 2,
+            name: 'Premium Plan',
+            price: 50,
+            durationDays: 30,
+          },
+        ],
+      },
+    },
+  })
   @UseGuards(JwtAdminGuard)
   @Get()
   async getSubscriptions(){
