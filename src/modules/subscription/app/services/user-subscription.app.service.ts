@@ -15,7 +15,14 @@ export class UserSubscriptionAppService{
   public async findUserSubscriptionsByUserId(userId: string){
     const subscriptions = await this.userSubscriptionRepository.find({
       where: { user: { id: userId } },
-      order: { createdAt: 'DESC' }
+      order: { createdAt: 'DESC' },
+      relations: ['plan'],
+      select: {
+        plan: {
+          name: true,
+          durationDays: true
+        }
+      }
     })
     return subscriptions
   }
