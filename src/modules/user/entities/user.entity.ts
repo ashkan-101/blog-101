@@ -4,8 +4,8 @@ import { LikePostEntity } from "src/modules/post/entities/likePost.entity";
 import { PostReportEntity } from "src/modules/post/entities/postReport.entity";
 import { CommentEntity } from "src/modules/post/entities/comment.entity";
 import { NotificationEntity } from "./notification.entity";
-import { SubscriptionPlanEntity } from "src/modules/subscription/entities/subscription-plan.entity";
 import { UserSubscriptionEntity } from "src/modules/subscription/entities/user-subscription.entity";
+import { PaymentEntity } from "src/modules/payment/entities/payment.entity";
 
 @Entity('user')
 export class UserEntity extends BaseEntity{
@@ -31,5 +31,8 @@ export class UserEntity extends BaseEntity{
   notifications: NotificationEntity
 
   @OneToMany(() => UserSubscriptionEntity, subscription => subscription.user)
-  subscriptionsPlans: UserSubscriptionEntity
+  userSubscriptions: UserSubscriptionEntity[]
+
+  @OneToMany(() => PaymentEntity, payment => payment.user)
+  payments: PaymentEntity[]
 }

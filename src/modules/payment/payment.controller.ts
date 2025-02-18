@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { Controller, Get, Param, ParseUUIDPipe, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { PaymentService } from "./payment.service";
+import { JwtAppGuard } from "../auth/guards/jwt.app.guard";
 
 
 @Controller('/api/v1/payment')
@@ -8,10 +9,12 @@ export class PaymentController {
     private readonly paymentService: PaymentService
   ){}
 
-  @Post('/request')
-  async requestPayment(){
-    const result = await this.paymentService.requestPayment()
-    return result
+  @UseGuards(JwtAppGuard)
+  @Post('/request/:subscriptionId')
+  async requestPayment(@Param('subscriptionId', ParseUUIDPipe) id: string, @Req() req){
+    const user = req.user
+    const paymentUrl = await this.paymentService.requestPayment(id, user)
+    return { paymentUrl }
   }
 
   @Get('/verify')

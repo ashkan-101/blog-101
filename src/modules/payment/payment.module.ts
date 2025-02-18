@@ -5,13 +5,14 @@ import { PaymentProviderModule } from "src/common/services/payment/payment-provi
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PaymentEntity } from "./entities/payment.entity";
 import { PaymentFactory } from "./payment.factory";
+import { SubscriptionAppModule } from "../subscription/app/subscription.app.module";
 
 
 @Module({
   providers: [ PaymentService, PaymentFactory ],
   controllers: [ PaymentController ],
   imports: [
-    PaymentProviderModule,
+    PaymentProviderModule, SubscriptionAppModule,
     TypeOrmModule.forFeature([PaymentEntity])
   ]
 })

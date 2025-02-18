@@ -12,6 +12,10 @@ import { SubscriptionPlanEntity } from "../entities/subscription-plan.entity";
   providers: [ SubscriptionAppService, UserSubscriptionAppService ],
   imports: [
     TypeOrmModule.forFeature([UserSubscriptionEntity, SubscriptionPlanEntity])
+  ],
+  exports: [
+    SubscriptionAppService, 
+    UserSubscriptionAppService
   ]
 })
 export class SubscriptionAppModule{}
