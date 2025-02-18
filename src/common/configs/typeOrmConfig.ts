@@ -12,6 +12,7 @@ import { CommentEntity } from "src/modules/post/entities/comment.entity";
 import { NotificationEntity } from "src/modules/user/entities/notification.entity";
 import { SubscriptionPlanEntity } from "src/modules/subscription/entities/subscription-plan.entity";
 import { UserSubscriptionEntity } from "src/modules/subscription/entities/user-subscription.entity";
+import { PaymentEntity } from "src/modules/payment/entities/payment.entity";
 config()
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
@@ -29,5 +30,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     CategoryEntity, SubcategoryEntity,
     CommentEntity, NotificationEntity,
     SubscriptionPlanEntity, UserSubscriptionEntity,
+    PaymentEntity
   ]
 }
