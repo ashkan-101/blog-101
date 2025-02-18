@@ -11,10 +11,19 @@ export class SubscriptionAppService{
     private readonly subscriptionRepository: Repository<SubscriptionPlanEntity>
   ){}
 
+  //---------------------------------public methods
   public async findAllSubscriptions(){
     const [subscriptions, totalPlans] = await this.subscriptionRepository.findAndCount({
       order: { durationDays: 'ASC' }
     })
     return { totalPlans, subscriptions}
+  }
+
+  //---------------------------------export methods
+  public async findSubscriptionById(id: string){
+    const subscription = await this.subscriptionRepository.findOne({
+      where: { id }
+    })
+    return subscription
   }
 }

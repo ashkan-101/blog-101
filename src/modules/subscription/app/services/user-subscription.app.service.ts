@@ -12,6 +12,7 @@ export class UserSubscriptionAppService{
     private readonly userSubscriptionRepository: Repository<UserSubscriptionEntity>
   ){}
 
+  //-----------------------------------public methods
   public async findUserSubscriptionsByUserId(userId: string){
     const subscriptions = await this.userSubscriptionRepository.find({
       where: { user: { id: userId } },
@@ -25,5 +26,12 @@ export class UserSubscriptionAppService{
       }
     })
     return subscriptions
+  }
+
+  //-----------------------------------export methods
+
+  public async createUserSubscription(params: UserSubscriptionEntity){
+    const newUserSubscription = this.userSubscriptionRepository.create(params)
+    return await newUserSubscription.save()
   }
 }
