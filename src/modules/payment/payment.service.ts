@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { PaymentProviderService } from "src/common/services/payment/payment-provider.service";
 import { PaymentEntity } from "./entities/payment.entity";
 import { Repository } from "typeorm";
+import { PaymentFactory } from "./payment.factory";
 
 
 @Injectable()
@@ -10,7 +11,8 @@ export class PaymentService{
   constructor(
     @InjectRepository(PaymentEntity)
     private readonly paymentRepository: Repository<PaymentEntity>,
-    private readonly paymentProviderService: PaymentProviderService
+    private readonly paymentProviderService: PaymentProviderService,
+    private readonly paymentFactory: PaymentFactory
   ){}
 
   public async requestPayment(){
