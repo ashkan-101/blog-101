@@ -14,10 +14,7 @@ export class UserAppService {
     const user = await this.userRepository.findOne({
       where: { mobile }
     })
-
-    if(!user) {
-      throw new NotFoundException('not found any user with this mobile')
-    }
+    
     return user
   }
 

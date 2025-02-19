@@ -14,7 +14,7 @@ export class AuthAppFactory {
 
   }
 
-  public async validateUserByMobile(mobile: string){
+  public async findUserByMobile(mobile: string){
     return await this.findUser.findUserByMobile(mobile)
   }
 

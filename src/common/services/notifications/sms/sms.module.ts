@@ -10,6 +10,6 @@ import { SMSService } from "./sms.service";
       useClass: KaveNegar
     }
   ],
-  exports: [SMSService]
+  exports: [ SMSService ]
 })
 export class SMSModule{}

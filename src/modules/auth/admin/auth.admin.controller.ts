@@ -4,7 +4,7 @@ import { SignInAdminDto } from "./dtos/signIn-admin.dto";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 
-@Controller('/api/v1/auth')
+@Controller('/api/v1/admin/auth')
 export class AuthAdminController{
   constructor(
     private readonly authAdminService: AuthAdminService,
@@ -16,7 +16,7 @@ export class AuthAdminController{
     description: 'Authenticates an admin by email and password, and returns a JWT token if credentials are correct.',
   })
   @ApiBody({
-    description: 'Sign-In Admin Credentials',
+    description: 'Sign-In Admin with email and password',
     type: SignInAdminDto,
   })
   @ApiResponse({
@@ -30,16 +30,16 @@ export class AuthAdminController{
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid credentials, either email or password is incorrect.',
+    description: 'password is incorrect or invalid email & password format',
   })
   @ApiResponse({
     status: 404,
     description: 'not found admin with entered email',
   })
-  @Post('/signin-admin')
+  @Post('/signin')
   async signIn(@Body() body: SignInAdminDto){
-    const jwt = await this.authAdminService.authenticateAdmin(body)
+    const jwtToken = await this.authAdminService.authenticateAdmin(body)
 
-    return { token: jwt }
+    return { token: jwtToken }
   }
 }
