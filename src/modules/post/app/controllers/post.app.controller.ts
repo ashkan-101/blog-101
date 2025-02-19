@@ -4,6 +4,7 @@ import { PostSorting } from "../../enums/Post.Sorting";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { CacheInterceptor } from "src/common/interceptors/cache.interceptor";
+import { Request } from "express";
 
 @Controller('/api/v1/posts')
 export class PostAppController {

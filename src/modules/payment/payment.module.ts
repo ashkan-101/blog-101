@@ -6,6 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { PaymentEntity } from "./entities/payment.entity";
 import { PaymentFactory } from "./payment.factory";
 import { SubscriptionAppModule } from "../subscription/app/subscription.app.module";
+import { AuthAppModule } from "../auth/app/auth.app.module";
 
 
 @Module({
@@ -13,6 +14,7 @@ import { SubscriptionAppModule } from "../subscription/app/subscription.app.modu
   controllers: [ PaymentController ],
   imports: [
     PaymentProviderModule, SubscriptionAppModule,
+    AuthAppModule,
     TypeOrmModule.forFeature([PaymentEntity])
   ]
 })

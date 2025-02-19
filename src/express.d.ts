@@ -5,8 +5,8 @@ import { IUserEntity } from './modules/user/interfaces/IUser.Entity';
 declare global {
   namespace Express {
     interface Request {
-      admin?: any;
-      user?: any;  
+      admin?: IAdminEntity;
+      user?: IUserEntity;  
     }
   }
 }

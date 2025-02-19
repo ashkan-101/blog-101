@@ -62,7 +62,9 @@ export class AdminService{
   }
 
   public async findAdminById(id: string){
-
+    if(!id){
+      throw new BadRequestException('please enter valid Id')
+    }
     const admin = await this.adminRepository.findOne({
       where: { id },
       relations: [],   //added posts in relations

@@ -6,10 +6,12 @@ import { MulterModule } from "@nestjs/platform-express";
 import { multerOptions } from "src/common/configs/multer/multerConfig";
 import { PostImageService } from "./post.image.service";
 import { PostAppModule } from "./app/post.app.module";
+import { AuthAdminModule } from "../auth/admin/auth.admin.module";
 
 @Module({
   controllers: [PostImagesController],
   imports: [
+    AuthAdminModule,
     PostAdminModule, PostAppModule,
     MulterModule.register(multerOptions),
   ],

@@ -9,12 +9,13 @@ import { LocalDiskStorageService } from "src/common/services/storage/localDiskSt
 import { PostReportAdminController } from "./controllers/post-report.admin.controller";
 import { PostReportAdminService } from "./services/post-report.admin.service";
 import { PostReportEntity } from "../entities/postReport.entity";
+import { AuthAdminModule } from "src/modules/auth/admin/auth.admin.module";
 
 @Module({
   controllers: [PostAdminController, PostReportAdminController],
   providers: [PostAdminService, PostAdminFactory, LocalDiskStorageService, PostReportAdminService],
   imports: [
-    CategoryAdminModule,
+    CategoryAdminModule, AuthAdminModule,
     TypeOrmModule.forFeature([PostEntity, PostReportEntity])
   ]
 })

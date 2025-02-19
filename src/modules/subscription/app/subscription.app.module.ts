@@ -6,11 +6,13 @@ import { UserSubscriptionAppService } from "./services/user-subscription.app.ser
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserSubscriptionEntity } from "../entities/user-subscription.entity";
 import { SubscriptionPlanEntity } from "../entities/subscription-plan.entity";
+import { AuthAppModule } from "src/modules/auth/app/auth.app.module";
 
 @Module({
   controllers: [ SubscriptionAppController, UserSubscriptionAppController ],
   providers: [ SubscriptionAppService, UserSubscriptionAppService ],
   imports: [
+    AuthAppModule,
     TypeOrmModule.forFeature([UserSubscriptionEntity, SubscriptionPlanEntity])
   ],
   exports: [

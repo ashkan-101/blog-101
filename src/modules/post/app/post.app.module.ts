@@ -14,6 +14,7 @@ import { CommentEntity } from "../entities/comment.entity";
 import { CommentAppController } from "./controllers/comment.app.controller";
 import { CommentAppService } from "./services/comment.app.service";
 import { RedisModule } from "src/common/cache/redis.module";
+import { AuthAppModule } from "src/modules/auth/app/auth.app.module";
 
 
 @Module({
@@ -27,7 +28,7 @@ import { RedisModule } from "src/common/cache/redis.module";
     CommentAppService
   ],
   imports: [
-    RedisModule,
+    RedisModule, AuthAppModule,
     TypeOrmModule.forFeature([PostEntity, LikePostEntity, PostReportEntity, CommentEntity])
   ],
 })

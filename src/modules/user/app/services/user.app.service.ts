@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../../entities/user.entity";
@@ -11,7 +11,13 @@ export class UserAppService {
   ){}
 
   public async findUserByMobile(mobile: string){
-    const user = await this.userRepository.findOne({where: {mobile}})
+    const user = await this.userRepository.findOne({
+      where: { mobile }
+    })
+
+    if(!user) {
+      throw new NotFoundException('not found any user with this mobile')
+    }
     return user
   }
 
@@ -21,7 +27,15 @@ export class UserAppService {
   }
 
   public async findUserById(userId: string){
+    if(!userId){
+      throw new BadRequestException('please enter valid id')
+    }
+
     const user = await this.userRepository.findOne({where: { id: userId }})
+
+    if(!user){
+      throw new NotFoundException('not found any user with this Id')
+    }
     return user
   }
 }
