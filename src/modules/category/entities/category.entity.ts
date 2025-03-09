@@ -5,8 +5,8 @@ import { SubcategoryEntity } from "./subcategory.entity";
 @Entity('category')
 export class CategoryEntity extends BaseEntity {
   @Column({type: 'varchar', nullable: false})
-  title!: string;
+  title: string;
 
   @OneToMany(()=> SubcategoryEntity, subcategory => subcategory.category)
-  subcategories!: SubcategoryEntity[];
+  subcategories: SubcategoryEntity[];
 }

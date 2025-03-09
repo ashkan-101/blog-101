@@ -1,10 +1,14 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from "@nestjs/common";
-import { SubcategoryAdminService } from "../services/subcategory.admin.service";
-import { NewSubcategoryDto } from "../dtos/subcategory/new-subcategory.dto";
-import { SetAccessRoles } from "src/common/decorators/SetAccessRoles";
-import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
-import { UpdateSubcategoryDto } from "../dtos/subcategory/update-subcategory.dto";
+import { 
+  Post, UseGuards,
+  Body, Controller, 
+  Delete, Get, Param, 
+  ParseUUIDPipe, Patch, 
+} from "@nestjs/common";
 import { JwtAdminGuard } from "src/modules/auth/guards/jwt.admin.guard";
+import { NewSubcategoryDto } from "../dtos/subcategory/new-subcategory.dto";
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
+import { SubcategoryAdminService } from "../services/subcategory.admin.service";
+import { UpdateSubcategoryDto } from "../dtos/subcategory/update-subcategory.dto";
 
 @UseGuards(JwtAdminGuard)
 @Controller('/api/v1/admin/subcategories')
@@ -13,7 +17,7 @@ export class SubcategoryAdminController {
     private readonly subcategoryAdminService: SubcategoryAdminService
   ) {}
 
-  @ApiOperation({ summary: 'Create a new subcategory' })
+  @ApiOperation({ summary: 'Create a new subcategory -- ADMIN' })
   @ApiBody({
     description: 'The data required to create a new subcategory',
     type: NewSubcategoryDto,
@@ -21,13 +25,6 @@ export class SubcategoryAdminController {
   @ApiResponse({
     status: 201,
     description: 'Subcategory created successfully',
-    schema: {
-      example: {
-        id: 'sub-category-id',
-        title: 'Subcategory Title',
-        categoryId: 'category-id',
-      },
-    },
   })
   @ApiResponse({
     status: 409,
@@ -36,28 +33,6 @@ export class SubcategoryAdminController {
   @ApiResponse({
     status: 404,
     description: 'Category not found with the given ID',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - JWT token is missing or invalid.',
-    schema: {
-      type: 'object',
-      properties: {
-        statusCode: { type: 'number', example: 401 },
-        message: { type: 'string', example: 'Unauthorized' },
-      }
-    }
-  })
-  @ApiResponse({
-    status: 403,
-    description: 'Forbidden - User does not have the required role (admin, superadmin).',
-    schema: {
-      type: 'object',
-      properties: {
-        statusCode: { type: 'number', example: 403 },
-        message: { type: 'string', example: 'Forbidden' },
-      }
-    }
   })
   @Post()
   async createSubcategory(@Body() body: NewSubcategoryDto){
@@ -112,7 +87,6 @@ export class SubcategoryAdminController {
     const subcategories = await this.subcategoryAdminService.getSubcategoriesByCategoryId(categoryId)
     return subcategories
   }
-
 
   @ApiOperation({ summary: 'Delete a subcategory by its ID' })
   @ApiParam({

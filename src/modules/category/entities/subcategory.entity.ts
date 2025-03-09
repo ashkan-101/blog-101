@@ -8,14 +8,14 @@ import { PostEntity } from "src/modules/post/entities/post.entity";
 export class SubcategoryEntity extends BaseEntity {
 
   @Column({type: 'varchar', nullable: false})
-  title!: string;
+  title: string;
 
   @ManyToOne(()=> CategoryEntity, category => category.subcategories, {onDelete: 'CASCADE'})
   @JoinColumn({name: 'category'})
-  category!: CategoryEntity;
+  category: CategoryEntity;
 
   @OneToMany(()=> PostEntity, post => post.subcategory)
-  posts!: PostEntity[];
+  posts: PostEntity[];
 
   // @ManyToMany(()=> UserPG, user => user.favoriteSubcategories)
   // folowingUsers!: IUserPG[]

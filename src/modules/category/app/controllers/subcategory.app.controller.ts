@@ -1,4 +1,7 @@
-import { Controller, DefaultValuePipe, Get, ParseIntPipe, Query, UseGuards } from "@nestjs/common";
+import { 
+  Controller, DefaultValuePipe, Get, Param, 
+  ParseIntPipe, ParseUUIDPipe, Query, UseGuards 
+} from "@nestjs/common";
 import { SubcategoryAppService } from "../services/subcategory.app.service";
 import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
@@ -40,33 +43,24 @@ export class SubcategoryAppController {
       }
     }
   })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - JWT token is missing or invalid.',
-    schema: {
-      type: 'object',
-      properties: {
-        statusCode: { type: 'number', example: 401 },
-        message: { type: 'string', example: 'Unauthorized' },
-      }
-    }
-  })
-  @ApiResponse({
-    status: 403,
-    description: 'Forbidden - User does not have the required role (admin, superadmin, or user).',
-    schema: {
-      type: 'object',
-      properties: {
-        statusCode: { type: 'number', example: 403 },
-        message: { type: 'string', example: 'Forbidden' },
-      }
-    }
-  })
   @Get()
   async getSubcategories(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number){
     const {totalPages, subcategories} = await this.subcategoryAppService.findAllSubcategories(page)
 
     return {
+      totalPages,
+      subcategories
+    }
+  }
+
+  @Get(':categoryId')
+  async getSubcategoriesForCategory(
+    @Param('categoryId', ParseUUIDPipe) categoryId: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number
+  ){
+    const { totalPages, subcategories } = await this.subcategoryAppService.findAllSubcategoriesByCategoryId(categoryId, page)
+
+    return { 
       totalPages,
       subcategories
     }

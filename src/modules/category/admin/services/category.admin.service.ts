@@ -1,9 +1,12 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
-import { NewCategoryDto } from "../dtos/category/new-category.dto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { CategoryEntity } from "../../entities/category.entity";
+import { 
+  BadRequestException, ConflictException, 
+  Injectable, NotFoundException 
+} from "@nestjs/common";
 import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 import { paginateTool } from "src/common/utils/paginate.tool";
+import { CategoryEntity } from "../../entities/category.entity";
+import { NewCategoryDto } from "../dtos/category/new-category.dto";
 import { UpdateCategoryDto } from "../dtos/category/update-category.dto";
 
 
@@ -36,7 +39,8 @@ export class CategoryAdminService {
 
     const [categories, totalCount] = await this.categoryRepository.findAndCount({
       order: { createdAt: 'DESC' },
-      take: pagination.take, skip: pagination.skip,
+      take: pagination.take, 
+      skip: pagination.skip,
     })
 
     return {
@@ -47,18 +51,33 @@ export class CategoryAdminService {
 
   public async deleteCategoryById(categoryId: string): Promise<void>{
     const deleteResult = await this.categoryRepository.delete({id: categoryId})
-    if(deleteResult.affected === 0) throw new NotFoundException('not found any category with this ID')
+    if(deleteResult.affected === 0) {
+      throw new NotFoundException('not found any category with this ID')
+    }
   }
 
   public async updateCategoryById(categoryId: string, params: UpdateCategoryDto){
     await this.validateUniqueTitle(params.title)
     
     const updateResult = await this.categoryRepository.update({id: categoryId}, params)
-    if(updateResult.affected === 0) throw new NotFoundException('not found any category with this ID')
+    if(updateResult.affected === 0) {
+      throw new NotFoundException('not found any category with this ID')
+    }
   }
 
   //-----------------------------------export methods
-  public async findCategoryById(categoryId: string): Promise<null | CategoryEntity>{
-    return await this.categoryRepository.findOne({where: { id: categoryId }})
+  public async findCategoryById(categoryId: string): Promise<CategoryEntity>{
+    if(!categoryId){
+      throw new BadRequestException('please ented valid ID')
+    }
+    const category = await this.categoryRepository.findOne({where: 
+      { id: categoryId }
+    })
+
+    if(!category){
+      throw new NotFoundException('not found Any category with this ID')
+    }
+
+    return category
   }
 } 
