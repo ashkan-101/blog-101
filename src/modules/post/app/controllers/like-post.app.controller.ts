@@ -1,7 +1,10 @@
-import { Controller, Get, Param, ParseUUIDPipe, Patch, Req, UseGuards } from "@nestjs/common";
-import { LikePostAppService } from "../services/like-post.app.service";
+import { 
+  Controller, Get, Param, 
+  ParseUUIDPipe, Patch, Req, UseGuards 
+} from "@nestjs/common";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
 import { ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
+import { LikePostAppService } from "../services/like-post.app.service";
 
 @Controller('/api/v1/posts/like')
 export class LikePostAppController {
@@ -59,9 +62,10 @@ export class LikePostAppController {
   @UseGuards(JwtAppGuard)
   @Get(':postId')
   async getPostLikes(@Param('postId', ParseUUIDPipe) postId: string, @Req() req){
-    const likes = await this.likeAppService.findLikesByPostId(postId)
+    const { likesCount, likes } = await this.likeAppService.findLikesByPostId(postId)
     return { 
       likes,
+      likesCount,
       currentUser: req.user.id
      }
   }

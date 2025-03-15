@@ -35,7 +35,7 @@ export class PostAdminController{
   @UseGuards(JwtAdminGuard)
   @Post()
   async createPost(@Body() body: CreatePostDto, @Req() req){
-    const admin = req.user
+    const admin = req.admin
     const newPost = await this.postAdminService.createNewPost(body, admin)
     return { newPost }
   }
@@ -94,7 +94,7 @@ export class PostAdminController{
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('sortingBy', new DefaultValuePipe(PostSorting.POPULAR)) sortingBy: PostSorting
   ){
-    const posts = await this.postAdminService.getAllPosts(page, sortingBy)
+    const posts = await this.postAdminService.findAllPosts(page, sortingBy)
     return { posts }
   }
 
@@ -106,8 +106,7 @@ export class PostAdminController{
     name: 'id',
     required: true,
     description: 'ID of the post to be deleted (UUID format)',
-    type: String,
-    example: 'd12345d3-4567-890a-bcde-fghijklmn012',
+    type: String
   })
   @ApiResponse({
     status: 200,
@@ -126,7 +125,7 @@ export class PostAdminController{
   @UseGuards(JwtAdminGuard)
   @Delete(':id')
   async deletePost(@Param('id', ParseUUIDPipe) id: string, @Req() req){
-    const adminId= req.user.id
+    const adminId = req.admin.id
     await this.postAdminService.deletePostById(id, adminId)
 
     return { deleteResult: true }
@@ -189,7 +188,7 @@ export class PostAdminController{
   @UseGuards(JwtAdminGuard)
   @Put(':id')
   async updatePost(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdatePostDto, @Req() req){
-    const authorId = req.user.id
+    const authorId = req.admin.id
     await this.postAdminService.updatePostById(id, authorId, body)
     return { updateResult: true }
   }

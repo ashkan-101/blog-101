@@ -1,7 +1,10 @@
-import { Controller, Param, ParseUUIDPipe, Post, Req, UseGuards } from "@nestjs/common";
-import { PostReportAppService } from "../services/post-report.app.service";
+import { 
+  Post, Req, UseGuards,
+  Controller, Param, ParseUUIDPipe
+} from "@nestjs/common";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
 import { ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
+import { PostReportAppService } from "../services/post-report.app.service";
 
 
 @Controller('/api/v1/post/reports')
@@ -35,7 +38,7 @@ export class PostReportAppController {
   })
   @UseGuards(JwtAppGuard)
   @Post(':postId')
-  async saveReport(@Param('postId', ParseUUIDPipe) postId: string, @Req() req){
+  async newReport(@Param('postId', ParseUUIDPipe) postId: string, @Req() req){
     const user = req.user
     const newReport = await this.postReportAppService.createNewReport(postId, user)
 

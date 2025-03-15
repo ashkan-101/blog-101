@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { LikePostEntity } from "../../entities/likePost.entity";
 import { Repository } from "typeorm";
-import { UserEntity } from "src/modules/user/entities/user.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 import { PostAppFactory } from "../post.app.factory";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { LikePostEntity } from "../../entities/likePost.entity";
+import { UserEntity } from "src/modules/user/entities/user.entity";
 
 
 @Injectable()
@@ -30,8 +30,6 @@ export class LikePostAppService{
 
   public async likeOrDislikePostById(postId: string, user: UserEntity){
     const post = await this.postAppFactory.findPostById(postId)
-
-    if(!post) throw new NotFoundException('not found any post with this Id')
 
     const isLiked = await this.isPostLikedByUser(postId, user.id)
 

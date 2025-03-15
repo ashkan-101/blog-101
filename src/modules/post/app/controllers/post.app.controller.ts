@@ -1,10 +1,13 @@
-import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Query, Req, UseGuards, UseInterceptors } from "@nestjs/common";
-import { PostAppService } from "../services/post.app.service";
+import { 
+  Controller, DefaultValuePipe, Get, 
+  Param, ParseIntPipe, ParseUUIDPipe, 
+  Patch, Query, Req, UseGuards, UseInterceptors 
+} from "@nestjs/common";
 import { PostSorting } from "../../enums/Post.Sorting";
+import { PostAppService } from "../services/post.app.service";
 import { JwtAppGuard } from "src/modules/auth/guards/jwt.app.guard";
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { CacheInterceptor } from "src/common/interceptors/cache.interceptor";
-import { Request } from "express";
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 
 @Controller('/api/v1/posts')
 export class PostAppController {
@@ -47,9 +50,9 @@ export class PostAppController {
   async getPosts(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('sortingBy', new DefaultValuePipe(PostSorting.POPULAR)) sortingBy: PostSorting,
-    @Query('subcategoryId') subcategoryId?: string
+    @Query('subcategory') subcategoryId?: string
   ){
-    const {totalPages, posts }= await this.postAppService.getAllPosts(page, sortingBy, subcategoryId)
+    const { totalPages, posts }= await this.postAppService.getAllPosts(page, sortingBy, subcategoryId)
     return { 
       totalPages,
       posts

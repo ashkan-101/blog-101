@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { PostEntity } from "../../entities/post.entity";
 import { Repository } from "typeorm";
-import { paginateTool } from "src/common/utils/paginate.tool";
-import { PostSorting } from "../../enums/Post.Sorting";
 import { validate as validateUUID} from 'uuid'
+import { InjectRepository } from "@nestjs/typeorm";
+import { PostSorting } from "../../enums/Post.Sorting";
+import { PostEntity } from "../../entities/post.entity";
+import { paginateTool } from "src/common/utils/paginate.tool";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
 @Injectable()
 export class PostAppService {
@@ -31,6 +31,24 @@ export class PostAppService {
       .leftJoinAndSelect('post.author', 'author')
       .leftJoinAndSelect('post.subcategory', 'subcategory')
       .leftJoinAndSelect('subcategory.category', 'category')
+      .select('post')
+      .addSelect([
+        'author.id',
+        'author.userName',
+        'author.role',
+        'author.email',
+        'author.avatar' 
+      ])
+      .addSelect([
+        'subcategory.id',
+        'subcategory.title',
+        'subcategory.createdAt'
+      ])
+      .addSelect([
+        'category.id',
+        'category.title',
+        'category.createdAt'
+      ])
       .skip(pagination.skip)
       .take(pagination.take)
       .getManyAndCount()
@@ -59,6 +77,10 @@ export class PostAppService {
       'author.isActive',
       'author.createdAt',
       'author.id',
+      'subcategory.id',
+      'subcategory.title',
+      'category.id',
+      'category.title',
       'likes.id',
       'likes.createdAt',
       'user.id'
@@ -83,6 +105,10 @@ export class PostAppService {
 
   //------------------------------export methods
   public async findPostById(postId: string){
-    return await this.postRepository.findOne({ where: { id: postId }})
+    const post = await this.postRepository.findOne({ where: { id: postId }})
+    if(!post){
+      throw new NotFoundException('not found any post with this Id')
+    }
+    return post
   }
 }

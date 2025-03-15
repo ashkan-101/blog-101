@@ -12,7 +12,7 @@ export class PostReportAdminService {
 
   public async findAllPostReports(){
     const [reports, reportsCount] = await this.reportRepository.findAndCount({
-      order: { createdAt: 'desc' },
+      order: { createdAt: 'DESC' },
       relations: ['post', 'user', 'post.subcategory'],
       select: {
         user: { 
@@ -36,7 +36,6 @@ export class PostReportAdminService {
     }
   }
   
-
   public async deleteReportById(reportId: string){
     const deleteResult = await this.reportRepository.delete({
       id: reportId

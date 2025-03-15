@@ -32,7 +32,7 @@ export class PostEntity extends BaseEntity{
   @Column({type: 'varchar', nullable: true})
   thumbnailAltText: string;
 
-  @Column({type: 'jsonb'})
+  @Column({type: 'jsonb', nullable: true})
   gallery: PostImageType[];
 
   @Column({type: 'varchar', nullable: false})

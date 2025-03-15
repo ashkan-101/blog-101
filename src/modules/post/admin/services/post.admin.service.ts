@@ -1,15 +1,15 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { PostEntity } from "../../entities/post.entity";
 import { Repository } from "typeorm";
-import { CreatePostDto } from "../dtos/create-post.dto";
-import { AdminEntity } from "src/modules/admin/entities/admin.entity";
-import { PostAdminFactory } from "../post.admin.factory";
+import { InjectRepository } from "@nestjs/typeorm";
 import { PostSorting } from "../../enums/Post.Sorting";
-import { paginateTool } from "src/common/utils/paginate.tool";
-import { PostImageType } from "../../types/post.images.type";
-import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
 import { UpdatePostDto } from "../dtos/update-post.dto";
+import { CreatePostDto } from "../dtos/create-post.dto";
+import { PostEntity } from "../../entities/post.entity";
+import { PostAdminFactory } from "../post.admin.factory";
+import { PostImageType } from "../../types/post.images.type";
+import { paginateTool } from "src/common/utils/paginate.tool";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { AdminEntity } from "src/modules/admin/entities/admin.entity";
+import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
 
 @Injectable()
 export class PostAdminService{
@@ -60,14 +60,33 @@ export class PostAdminService{
     const post = await this.postRepository.findOne({
       where: { id: postId },
       relations: ['author', 'subcategory', 'subcategory.category'],
+      select: {
+        author: {
+          id: true,
+          userName: true,
+          email: true,
+          avatar: true,
+          role: true
+        },
+        subcategory: {
+          id: true,
+          createdAt: true,
+          title: true,
+          category: {
+            id: true,
+            createdAt: true,
+            title: true
+          }
+        }
+      }
     })
     
-    if(!post) throw new NotFoundException('not found anu post with this id')
+    if(!post) throw new NotFoundException('not found any post with this id')
     
     return post
   }
 
-  public async getAllPosts(page: number, sorting: PostSorting){
+  public async findAllPosts(page: number, sorting: PostSorting){
     const pagination = paginateTool({page, take: 20})
 
     const queryBuilder = this.postRepository.createQueryBuilder('post');
@@ -79,6 +98,24 @@ export class PostAdminService{
       .leftJoinAndSelect('post.author', 'author')
       .leftJoinAndSelect('post.subcategory', 'subcategory')
       .leftJoinAndSelect('subcategory.category', 'category')
+      .select('post')
+      .addSelect([
+        'author.id',
+        'author.userName',
+        'author.role',
+        'author.email',
+        'author.avatar' 
+      ])
+      .addSelect([
+        'subcategory.id',
+        'subcategory.title',
+        'subcategory.createdAt'
+      ])
+      .addSelect([
+        'category.id',
+        'category.title',
+        'category.createdAt'
+      ])
       .skip(pagination.skip)
       .take(pagination.take)
       .getManyAndCount()
@@ -105,8 +142,6 @@ export class PostAdminService{
       relations: ['author', 'subcategory', 'subcategory.category'],
       order: { createdAt: 'DESC' }
     })
-
-    if(posts.length < 1) throw new NotFoundException('not found any posts with this autor Id')
     
     return posts
   }

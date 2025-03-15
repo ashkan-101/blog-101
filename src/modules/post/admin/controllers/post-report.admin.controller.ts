@@ -13,31 +13,6 @@ export class PostReportAdminController {
   @ApiResponse({
     status: 200,
     description: 'Successfully retrieved the reports and their count',
-    schema: {
-      example: {
-        reportsCount: 3,
-        reports: [
-          {
-            user: {
-              id: 'userId1',
-              mobile: '1234567890',
-              name: 'User One',
-            },
-            post: {
-              id: 'postId1',
-              title: 'Post Title 1',
-              slug: 'post-title-1',
-              description: 'Post description here',
-              createdAt: '2025-02-10T00:00:00Z',
-              subcategory: {
-                id: 'subcategoryId1',
-                title: 'Subcategory 1',
-              },
-            },
-          },
-        ],
-      },
-    },
   })
   @UseGuards(JwtAdminGuard)
   @Get()
