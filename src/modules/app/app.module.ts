@@ -13,6 +13,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { PaymentProviderModule } from 'src/common/services/payment/payment-provider.module';
 import { PaymentModule } from '../payment/payment.module';
 import { SubscriptionModule } from '../subscription/subscription.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { SubscriptionModule } from '../subscription/subscription.module';
     PaymentProviderModule, PaymentModule,
     SubscriptionModule,
     TypeOrmModule.forRoot(typeOrmConfig),
-    ThrottlerModule.forRoot(throttlerConfig)
+    ThrottlerModule.forRoot(throttlerConfig),
+    ScheduleModule.forRoot()
   ],
   providers: [ 
     { provide: APP_GUARD, useClass: ThrottlerGuard } 

@@ -4,7 +4,7 @@ import {
   NotFoundException 
 } from "@nestjs/common";
 import { randomInt } from "crypto";
-import { Repository } from "typeorm";
+import { LessThan, Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import { compareSync, hashSync } from 'bcrypt'
 import { OtpEntity } from "../entities/otp.entity";
@@ -13,6 +13,7 @@ import { AuthAppFactory } from "./auth.app.factory";
 import { GenerateCode } from "../types/GenerateCode";
 import { SignInUserDto } from "./dtos/signIn-user.dto";
 import { SMSService } from "src/common/services/notifications/sms/sms.service";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class AuthAppService {
@@ -25,6 +26,14 @@ export class AuthAppService {
   ){}
 
   //-------------------------------private methods
+  @Cron('0 0 * * *', { timeZone: 'Asia/Tehran' })
+  private async cleanupExpiredOtps() {
+    const deleted = await this.otpRepository.delete({
+      expiresAt: LessThan(new Date())
+    });
+    console.log(`Deleted ${deleted.affected} expired OTPs`);
+  }
+
   private async validateExistOtpForNextRequest(mobile: string): Promise<void> {
     const otp = await this.otpRepository.findOne({
       where: { mobile }, 
