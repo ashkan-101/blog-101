@@ -1,17 +1,36 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, OnModuleInit } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { AdminEntity } from "./entities/admin.entity";
 import { Repository, QueryFailedError } from "typeorm";
 import { CreateAdminDto } from "./dtos/create-admin.dto";
 import { genSalt, hash } from 'bcrypt'
 import { UpdateAdminDto } from "./dtos/update-admin.dto";
+import { AdminRole } from "./enums/AdminRole";
+import { config } from "dotenv";
+config()
 
 @Injectable()
-export class AdminService{
+export class AdminService implements OnModuleInit{
   constructor(
     @InjectRepository(AdminEntity)
     private readonly adminRepository: Repository<AdminEntity>
   ){}
+  async onModuleInit() {
+    const superAdmin = await this.adminRepository.findOne({
+      where: { role: AdminRole.SUPERADMIN }
+    })
+
+    if(!superAdmin){
+      const hashedPassword = await this.hashPassword( process.env.SUPERADMIN_PASSWORD as string )
+      const newSuperAdmin = this.adminRepository.create({
+        userName: process.env.SUPERADMIN_USERNAME,
+        email: process.env.SUPERADMIN_EMAIL,
+        password: hashedPassword,
+        role: AdminRole.SUPERADMIN
+      })
+      await newSuperAdmin.save()
+    }
+  }
 
   //---------------------------------private methods
   private async validateRepeatPassword(password: string, repeatPassword: string): Promise<void>{
