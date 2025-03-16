@@ -3,11 +3,11 @@ import { extname, join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 import { config } from 'dotenv';
-import { StorageService } from 'src/common/abstracts/storage.service';
+import { IStorageService } from '../interfaces/IStorage.service';
 config()
 
 @Injectable()
-export class LocalDiskStorageService extends StorageService{
+export class LocalDiskStorageService implements IStorageService{
   private readonly uploadDir = join(process.cwd(), 'uploads');
 
   async upload(file: Express.Multer.File, options: { path: string; prefix?: string }): Promise<{ imagePath: string, imageName: string }> {
@@ -17,8 +17,6 @@ export class LocalDiskStorageService extends StorageService{
     const fileName = `${options.prefix || ''}${uuidv4()}${fileExt}`;
 
     const fullPath = join(this.uploadDir, options.path, fileName);
-
-    // const publicPath = join(options.path, fileName).replace(/\\/g, '/');
 
     await fs.promises.mkdir(join(this.uploadDir, options.path), { recursive: true });
     await fs.promises.writeFile(fullPath, file.buffer);
@@ -46,17 +44,4 @@ export class LocalDiskStorageService extends StorageService{
       throw new NotFoundException('file not Found')
     }
   }
-
-
-  // public getFileUrl(path: string): string {
-  //   return `${process.env.APP_URL}:${process.env.APP_PORT}/uploads/${path}`;
-  // }
-
-  // async moveFile(sourcePath: string, destinationPath: string): Promise<void> {
-  //   try {
-  //     await fs.promises.rename(sourcePath, destinationPath);
-  //   } catch (error) {
-  //     throw new Error(`Failed to move file from ${sourcePath} to ${destinationPath}`);
-  //   }
-  // }
 }

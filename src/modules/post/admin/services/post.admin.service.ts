@@ -9,7 +9,7 @@ import { PostImageType } from "../../types/post.images.type";
 import { paginateTool } from "src/common/utils/paginate.tool";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { AdminEntity } from "src/modules/admin/entities/admin.entity";
-import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
+import { LocalDiskStorageService } from "src/common/services/storage/providers/localDiskStorage.service";
 
 @Injectable()
 export class PostAdminService{

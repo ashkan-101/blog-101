@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, UnsupportedMediaTypeException } from "@nestjs/common";
-import { LocalDiskStorageService } from "src/common/services/storage/localDiskStorage.service";
+import { LocalDiskStorageService } from "src/common/services/storage/providers/localDiskStorage.service";
 import { contentType } from 'mime-types'
 
 @Injectable()
