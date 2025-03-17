@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { AuthAppFactory } from '../app/auth.app.factory';
 import { JwtService } from '@nestjs/jwt';
 import { config } from 'dotenv';
+import { Request } from 'express';
 config()
 
 @Injectable()
@@ -12,7 +13,7 @@ export class JwtAppGuard implements CanActivate{
   ){}
   
   async canActivate(context: ExecutionContext) { 
-    const request = context.switchToHttp().getRequest()
+    const request = context.switchToHttp().getRequest<Request>()
 
     if (
       !request.headers.authorization ||

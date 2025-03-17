@@ -9,11 +9,12 @@ import { UserAppModule } from "../../user/app/user.app.module";
 import { JwtAppGuard } from "../guards/jwt.app.guard";
 import { config } from 'dotenv'
 import { SMSModule } from "src/common/services/notifications/sms/sms.module";
+import { jwtOptionalAppGuard } from "../guards/jwt.optional.app.guard";
 config()
 
 @Module({
   controllers: [ AuthAppController ],
-  providers: [ JwtAppGuard, AuthAppService, AuthAppFactory ],
+  providers: [ JwtAppGuard, jwtOptionalAppGuard, AuthAppService, AuthAppFactory ],
   imports: [
     SMSModule,
     forwardRef(() => UserAppModule),
@@ -23,6 +24,6 @@ config()
       signOptions: { expiresIn: '30d' },
     })
   ],
-  exports: [ JwtAppGuard, AuthAppFactory, JwtModule]
+  exports: [ JwtAppGuard, jwtOptionalAppGuard, AuthAppFactory, JwtModule]
 })
 export class AuthAppModule{}

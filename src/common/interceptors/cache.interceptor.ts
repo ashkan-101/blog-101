@@ -2,13 +2,17 @@ import {Injectable, NestInterceptor, ExecutionContext, CallHandler, Inject} from
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { RedisCacheService } from '../cache/redis-cache.service';
+import { Request } from 'express';
 
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {
   constructor(private readonly redisCacheService: RedisCacheService) {}
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<Request>();
+    if(!request.user){
+      return next.handle()
+    }
     const key = this.generateCacheKey(request);
 
     const cachedData = await this.redisCacheService.getCache(key);
