@@ -6,7 +6,8 @@ declare global {
   namespace Express {
     interface Request {
       admin?: IAdminEntity;
-      user?: IUserEntity;  
+      user?: IUserEntity;
+      user_subscription: any
     }
   }
 }

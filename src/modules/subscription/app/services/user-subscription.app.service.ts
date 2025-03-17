@@ -28,6 +28,28 @@ export class UserSubscriptionAppService{
     return subscriptions
   }
 
+  public async getActiveSubscription(userId: string): Promise<UserSubscriptionEntity | null>{
+    const subscription = await this.userSubscriptionRepository.findOne({ 
+      where: { user: { id: userId }, isActive: true },
+      order: { createdAt: 'DESC' }, 
+      relations: [ 'subscription' ]
+    })
+
+    if(!subscription) {
+      return null
+    }
+    
+    const currentDate = new Date()
+
+    if(subscription.endDate < currentDate){
+      subscription.isActive = false
+      await this.userSubscriptionRepository.save(subscription)
+      return null
+    }
+
+    return subscription
+  }
+
   //-----------------------------------export methods
 
   public async createUserSubscription(params: UserSubscriptionEntity){
